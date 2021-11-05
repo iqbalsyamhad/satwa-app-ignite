@@ -61,13 +61,6 @@ export const DemoListScreen: FC<StackScreenProps<NavigatorParamList, "demoList">
       <View testID="DemoListScreen" style={FULL}>
         <GradientBackground colors={["#422443", "#281b34"]} />
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
-          <Header
-            headerTx="demoListScreen.title"
-            leftIcon="back"
-            onLeftPress={goBack}
-            style={HEADER}
-            titleStyle={HEADER_TITLE}
-          />
           <FlatList
             contentContainerStyle={FLAT_LIST}
             data={[...characters]}

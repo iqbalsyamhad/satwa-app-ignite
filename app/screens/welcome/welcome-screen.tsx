@@ -72,7 +72,7 @@ const CONTENT: TextStyle = {
 const CONTINUE: ViewStyle = {
   paddingVertical: spacing[4],
   paddingHorizontal: spacing[4],
-  backgroundColor: color.palette.deepPurple,
+  backgroundColor: color.palette.primary,
 }
 const CONTINUE_TEXT: TextStyle = {
   ...TEXT,
@@ -88,13 +88,12 @@ const FOOTER_CONTENT: ViewStyle = {
 
 export const WelcomeScreen: FC<StackScreenProps<NavigatorParamList, "welcome">> = observer(
   ({ navigation }) => {
-    const nextScreen = () => navigation.navigate("demo")
+    const nextScreen = () => navigation.navigate("login")
 
     return (
       <View testID="WelcomeScreen" style={FULL}>
         <GradientBackground colors={["#422443", "#281b34"]} />
         <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-          <Header headerTx="welcomeScreen.poweredBy" style={HEADER} titleStyle={HEADER_TITLE} />
           <Text style={TITLE_WRAPPER}>
             <Text style={TITLE} text="Your new app, " />
             <Text style={ALMOST} text="almost" />

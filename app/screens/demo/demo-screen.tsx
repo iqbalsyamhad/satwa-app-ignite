@@ -141,13 +141,6 @@ export const DemoScreen: FC<StackScreenProps<NavigatorParamList, "demo">> = obse
       <View testID="DemoScreen" style={FULL}>
         <GradientBackground colors={["#422443", "#281b34"]} />
         <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
-          <Header
-            headerTx="demoScreen.howTo"
-            leftIcon="back"
-            onLeftPress={goBack}
-            style={HEADER}
-            titleStyle={HEADER_TITLE}
-          />
           <Text style={TITLE} preset="header" tx="demoScreen.title" />
           <Text style={TAGLINE} tx="demoScreen.tagLine" />
           <BulletItem text="Integrated here, Navigation with State, TypeScript, Storybook, Solidarity, and i18n." />

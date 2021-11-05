@@ -8,8 +8,10 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { WelcomeScreen, DemoScreen, DemoListScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
+import { observer } from "mobx-react-lite"
+import { useStores } from "../models"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -24,6 +26,9 @@ import { navigationRef } from "./navigation-utilities"
  *   https://reactnavigation.org/docs/typescript#type-checking-the-navigator
  */
 export type NavigatorParamList = {
+  login: undefined
+  home: undefined
+  satwa: undefined
   welcome: undefined
   demo: undefined
   demoList: undefined
@@ -38,8 +43,9 @@ const AppStack = () => {
       screenOptions={{
         headerShown: false,
       }}
-      initialRouteName="welcome"
     >
+      <Stack.Screen name="home" component={HomeScreen} />
+      <Stack.Screen name="satwa" component={SatwaScreen} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
       <Stack.Screen name="demoList" component={DemoListScreen} />
@@ -47,20 +53,37 @@ const AppStack = () => {
   )
 }
 
-interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> {}
+const LoginStack = () => {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="login" component={LoginScreen} />
+    </Stack.Navigator>
+  )
+}
 
-export const AppNavigator = (props: NavigationProps) => {
+interface NavigationProps extends Partial<React.ComponentProps<typeof NavigationContainer>> { }
+
+export const AppNavigator = observer((props: NavigationProps) => {
   const colorScheme = useColorScheme()
+  const { authenticationStore } = useStores()
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
       {...props}
     >
-      <AppStack />
+      {authenticationStore.isAuthenticated ?
+        <AppStack />
+        :
+        <LoginStack />
+      }
     </NavigationContainer>
   )
-}
+});
 
 AppNavigator.displayName = "AppNavigator"
 

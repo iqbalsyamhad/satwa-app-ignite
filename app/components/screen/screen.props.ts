@@ -8,6 +8,8 @@ export interface ScreenProps {
    */
   children?: React.ReactNode
 
+  header?: React.ReactNode
+
   /**
    * An optional style override useful for padding & margin.
    */
@@ -27,11 +29,6 @@ export interface ScreenProps {
    * An optional status bar setting. Defaults to light-content.
    */
   statusBar?: "light-content" | "dark-content"
-
-  /**
-   * Should we not wrap in SafeAreaView? Defaults to false.
-   */
-  unsafe?: boolean
 
   /**
    * By how much should we offset the keyboard? Defaults to none.

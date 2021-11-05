@@ -13,12 +13,14 @@ import "./i18n"
 import "./utils/ignore-warnings"
 import React, { useState, useEffect } from "react"
 import { SafeAreaProvider, initialWindowMetrics } from "react-native-safe-area-context"
+import { DefaultTheme, configureFonts, Provider as PaperProvider } from 'react-native-paper';
 import { initFonts } from "./theme/fonts" // expo
 import * as storage from "./utils/storage"
 import { useBackButtonHandler, AppNavigator, canExit, useNavigationPersistence } from "./navigators"
 import { RootStore, RootStoreProvider, setupRootStore } from "./models"
 import { ToggleStorybook } from "../storybook/toggle-storybook"
 import { ErrorBoundary } from "./screens/error/error-boundary"
+import { color } from "./theme";
 
 // This puts screens in a native ViewController or Activity. If you want fully native
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
@@ -41,7 +43,7 @@ function App() {
 
   // Kick off initial async loading actions, like loading fonts and RootStore
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       await initFonts() // expo
       setupRootStore().then(setRootStore)
     })()
@@ -55,18 +57,30 @@ function App() {
   // You can replace with your own loading component if you wish.
   if (!rootStore || !isNavigationStateRestored) return null
 
+  const paperTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: color.primary,
+      accent: color.palette.primaryDark,
+    },
+  };
+
+
   // otherwise, we're ready to render the app
   return (
     <ToggleStorybook>
       <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={"always"}>
-            <AppNavigator
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
-          </ErrorBoundary>
-        </SafeAreaProvider>
+        <PaperProvider theme={paperTheme}>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+            <ErrorBoundary catchErrors={"always"}>
+              <AppNavigator
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </ErrorBoundary>
+          </SafeAreaProvider>
+        </PaperProvider>
       </RootStoreProvider>
     </ToggleStorybook>
   )

@@ -1,5 +1,9 @@
 import { GeneralApiProblem } from "./api-problem"
+import { Authentication } from "../../models/authentication/authentication"
 import { Character } from "../../models/character/character"
+
+export type LoginResult = { kind: "ok"; user: Authentication } | GeneralApiProblem
+export type LogoutResult = { kind: "ok"; } | GeneralApiProblem
 
 export interface User {
   id: number
