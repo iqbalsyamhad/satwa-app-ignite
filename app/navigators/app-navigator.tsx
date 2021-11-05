@@ -8,10 +8,13 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models"
+import { color } from "../theme";
+import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -36,6 +39,42 @@ export type NavigatorParamList = {
 
 // Documentation: https://reactnavigation.org/docs/stack-navigator/
 const Stack = createNativeStackNavigator<NavigatorParamList>()
+const Tab = createMaterialBottomTabNavigator()
+
+const dasboard = () => {
+  return (
+    <Tab.Navigator
+      barStyle={{ backgroundColor: '#FAFAFA' }}
+      shifting={false}
+      activeColor={color.palette.primary}
+      inactiveColor={color.palette.primary}>
+      <Tab.Screen name="Home" component={HomeScreen} options={{
+        tabBarLabel: 'Home',
+        tabBarIcon: ({ color }) => (
+          <Icofont name="home" color={color} size={26} />
+        )
+      }} />
+      <Tab.Screen name="Form" component={HomeScreen} options={{
+        tabBarLabel: 'Form',
+        tabBarIcon: ({ color }) => (
+          <Icofont name="view-compact" color={color} size={26} />
+        )
+      }} />
+      <Tab.Screen name="Histori" component={HomeScreen} options={{
+        tabBarLabel: 'Histori',
+        tabBarIcon: ({ color }) => (
+          <Icofont name="calendar-check-outline" color={color} size={26} />
+        )
+      }} />
+      <Tab.Screen name="Account" component={HomeScreen} options={{
+        tabBarLabel: 'Saya',
+        tabBarIcon: ({ color }) => (
+          <Icofont name="account-circle-outline" color={color} size={26} />
+        )
+      }} />
+    </Tab.Navigator>
+  );
+}
 
 const AppStack = () => {
   return (
@@ -44,7 +83,7 @@ const AppStack = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="home" component={HomeScreen} />
+      <Stack.Screen name="home" component={dasboard} />
       <Stack.Screen name="satwa" component={SatwaScreen} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
