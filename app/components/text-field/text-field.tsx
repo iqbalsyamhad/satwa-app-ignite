@@ -1,98 +1,49 @@
-import React from "react"
-import { StyleProp, TextInput, TextInputProps, TextStyle, View, ViewStyle } from "react-native"
-import { color, spacing, typography } from "../../theme"
-import { translate, TxKeyPath } from "../../i18n"
-import { Text } from "../text/text"
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import {
+  useController,
+  useFormContext,
+  ControllerProps,
+  UseControllerProps
+} from 'react-hook-form';
+import { spacing } from '../../theme';
+import { Caption, TextInput } from 'react-native-paper';
 
-// the base styling for the container
-const CONTAINER: ViewStyle = {
-  paddingVertical: spacing[3],
-}
+export const TextField = (props) => {
 
-// the base styling for the TextInput
-const INPUT: TextStyle = {
-  fontFamily: typography.primary,
-  color: color.text,
-  minHeight: 44,
-  fontSize: 18,
-  backgroundColor: color.palette.white,
-}
-
-// currently we have no presets, but that changes quickly when you build your app.
-const PRESETS: { [name: string]: ViewStyle } = {
-  default: {},
-}
-
-export interface TextFieldProps extends TextInputProps {
-  /**
-   * The placeholder i18n key.
-   */
-  placeholderTx?: TxKeyPath
-
-  /**
-   * The Placeholder text if no placeholderTx is provided.
-   */
-  placeholder?: string
-
-  /**
-   * The label i18n key.
-   */
-  labelTx?: TxKeyPath
-
-  /**
-   * The label text if no labelTx is provided.
-   */
-  label?: string
-
-  /**
-   * Optional container style overrides useful for margins & padding.
-   */
-  style?: StyleProp<ViewStyle>
-
-  /**
-   * Optional style overrides for the input.
-   */
-  inputStyle?: StyleProp<TextStyle>
-
-  /**
-   * Various look & feels.
-   */
-  preset?: keyof typeof PRESETS
-
-  forwardedRef?: any
-}
-
-/**
- * A component which has a label and an input together.
- */
-export function TextField(props: TextFieldProps) {
   const {
-    placeholderTx,
-    placeholder,
-    labelTx,
-    label,
-    preset = "default",
-    style: styleOverride,
-    inputStyle: inputStyleOverride,
-    forwardedRef,
-    ...rest
-  } = props
+    containerStyle,
+    name,
+    rules,
+    defaultValue,
+    ...inputProps
+  } = props;
 
-  const containerStyles = [CONTAINER, PRESETS[preset], styleOverride]
-  const inputStyles = [INPUT, inputStyleOverride]
-  const actualPlaceholder = placeholderTx ? translate(placeholderTx) : placeholder
+  const formContext = useFormContext();
+  const { ...methods } = formContext
+
+  if (!formContext || !name) {
+    const msg = !formContext ? "TextInput must be wrapped by the FormProvider" : "Name must be defined"
+    console.error(msg)
+    return null
+  }
+
+  const { field } = useController({ name, rules, defaultValue });
 
   return (
-    <View style={containerStyles}>
-      <Text preset="fieldLabel" tx={labelTx} text={label} />
+    <View style={[
+      { backgroundColor: '#F8FAFD', borderWidth: 1, borderColor: '#E7ECF3', borderRadius: spacing[3], overflow: 'hidden' },
+      containerStyle
+    ]}>
       <TextInput
-        placeholder={actualPlaceholder}
-        placeholderTextColor={color.palette.lighterGrey}
-        underlineColorAndroid={color.transparent}
-        {...rest}
-        style={inputStyles}
-        ref={forwardedRef}
+        style={{ backgroundColor: 'transparent' }}
+        underlineColor={'transparent'}
+        onChangeText={field.onChange}
+        onBlur={field.onBlur}
+        value={field.value}
+        {...inputProps}
       />
     </View>
-  )
-}
+
+  );
+};

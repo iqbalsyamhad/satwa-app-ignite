@@ -12,9 +12,9 @@ export class AuthenticationApi {
 
     async login(email: string, password: string): Promise<LoginResult> {
         try {
-            const response: ApiResponse<any> = await this.api.apisauce.post(
-                "/login",
-                { email, password }
+            const response: ApiResponse<any> = await this.api.apisauce.get(
+                "/login.json",
+                // { email, password }
             );
 
             if (!response.ok) {

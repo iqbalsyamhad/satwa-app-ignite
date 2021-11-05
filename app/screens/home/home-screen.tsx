@@ -22,7 +22,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
   // const navigation = useNavigation()
   return (
     <Screen style={ROOT} preset="scroll">
-      <Text preset="header" text="" />
+      <Text preset="header" text="aa" />
     </Screen>
   )
 })

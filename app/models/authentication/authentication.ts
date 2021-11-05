@@ -6,7 +6,7 @@ import { Instance, SnapshotOut, types } from "mobx-state-tree"
 export const AuthenticationModel = types
   .model("Authentication")
   .props({
-    id: types.maybe(types.string),
+    id: types.maybe(types.integer),
     name: types.maybe(types.string),
     email: types.maybe(types.string),
     accessToken: types.maybe(types.string),
