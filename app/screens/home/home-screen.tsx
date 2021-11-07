@@ -41,9 +41,8 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
           <Image source={require('../../../assets/images/SipesatLogo2.png')}
             style={{ width: 140 }}
             resizeMode={'contain'} />
-          <Title style={{ color: '#007FFF', marginVertical: spacing[3] }}>Home</Title>
         </View>
-        <ScrollView style={{ paddingHorizontal: spacing[5] }}
+        <ScrollView style={{ paddingTop: spacing[4], paddingHorizontal: spacing[5] }}
           refreshControl={
             <RefreshControl
               refreshing={loading}
