@@ -20,12 +20,8 @@ export function Header(props: HeaderProps) {
 
   return (
     <Appbar.Header theme={{ colors: { primary: color.palette.white } }}>
-      {leftIcon == "back" ?
+      {leftIcon == "back" &&
         <Appbar.BackAction onPress={onLeftPress} />
-        :
-        <Button preset="link" onPress={onLeftPress}>
-          <Icon icon={leftIcon} />
-        </Button>
       }
       <Appbar.Content title={header} />
     </Appbar.Header>

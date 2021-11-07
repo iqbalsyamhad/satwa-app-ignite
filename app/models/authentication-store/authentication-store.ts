@@ -24,7 +24,7 @@ export const AuthenticationStoreModel = types
     setAuthenticated(value: boolean) {
       self.isAuthenticated = value;
     },
-    setUser(authenticationSnapshot: AuthenticationSnapshot){
+    setUser(authenticationSnapshot: AuthenticationSnapshot) {
       self.user = authenticationSnapshot;
     },
   }))
@@ -47,6 +47,10 @@ export const AuthenticationStoreModel = types
         self.setAuthenticated(false);
         __DEV__ && console.tron.log(result.kind);
       }
+    }),
+
+    logout: flow(function* () {
+      self.setAuthenticated(false);
     }),
   }))
 

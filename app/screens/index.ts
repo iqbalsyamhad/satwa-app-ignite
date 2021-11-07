@@ -5,4 +5,7 @@ export * from "./error/error-boundary"
 // export other screens here
 export * from "./login/login-screen"
 export * from "./home/home-screen"
+export * from "./activity/activity-screen"
+export * from "./history/history-screen"
+export * from "./profile/profile-screen"
 export * from "./satwa/satwa-screen"

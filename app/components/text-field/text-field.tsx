@@ -6,7 +6,7 @@ import {
   ControllerProps,
   UseControllerProps
 } from 'react-hook-form';
-import { spacing } from '../../theme';
+import { color, spacing } from '../../theme';
 import { Caption, TextInput } from 'react-native-paper';
 
 export const TextField = (props) => {
@@ -32,7 +32,7 @@ export const TextField = (props) => {
 
   return (
     <View style={[
-      { backgroundColor: '#F8FAFD', borderWidth: 1, borderColor: '#E7ECF3', borderRadius: spacing[3], overflow: 'hidden' },
+      { backgroundColor: color.palette.bgForms, borderWidth: 1, borderColor: '#E7ECF3', borderRadius: spacing[3], overflow: 'hidden' },
       containerStyle
     ]}>
       <TextInput

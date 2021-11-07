@@ -1,20 +1,20 @@
 import { ApiResponse } from "apisauce";
 import { Api } from "../api";
 import { getGeneralApiProblem } from "../api-problem";
-import { LoginResult } from "../api.types";
+import { GetSatwaResults } from "../api.types";
 
-export class AuthenticationApi {
+export class SatwaApi {
     private api: Api;
 
     constructor(api: Api) {
         this.api = api;
     }
 
-    async login(email: string, password: string): Promise<LoginResult> {
+    async getAllSatwa(): Promise<GetSatwaResults> {
         try {
+            console.log("api satwa start!")
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                "/login.json",
-                // { email, password }
+                "/satwa.json",
             );
 
             if (!response.ok) {
@@ -22,10 +22,10 @@ export class AuthenticationApi {
                 if (problem) return problem;
             }
 
-            const user = response.data.data
-            console.log("api login success!")
+            const satwa = response.data.data
+            console.log("api satwa success!")
 
-            return { kind: "ok", user };
+            return { kind: "ok", satwa };
         } catch (error) {
             __DEV__ && console.tron.log(error.message);
             return { kind: "bad-data" };

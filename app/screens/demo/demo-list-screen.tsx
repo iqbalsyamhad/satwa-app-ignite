@@ -46,34 +46,11 @@ export const DemoListScreen: FC<StackScreenProps<NavigatorParamList, "demoList">
   ({ navigation }) => {
     const goBack = () => navigation.goBack()
 
-    const { characterStore } = useStores()
-    const { characters } = characterStore
-
-    useEffect(() => {
-      async function fetchData() {
-        await characterStore.getCharacters()
-      }
-
-      fetchData()
-    }, [])
-
     return (
       <View testID="DemoListScreen" style={FULL}>
         <GradientBackground colors={["#422443", "#281b34"]} />
         <Screen style={CONTAINER} preset="fixed" backgroundColor={color.transparent}>
-          <FlatList
-            contentContainerStyle={FLAT_LIST}
-            data={[...characters]}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({ item }) => (
-              <View style={LIST_CONTAINER}>
-                <Image source={{ uri: item.image }} style={IMAGE} />
-                <Text style={LIST_TEXT}>
-                  {item.name} ({item.status})
-                </Text>
-              </View>
-            )}
-          />
+          
         </Screen>
       </View>
     )

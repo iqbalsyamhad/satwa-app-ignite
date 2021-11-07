@@ -9,7 +9,7 @@ import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models"
@@ -30,7 +30,11 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
  */
 export type NavigatorParamList = {
   login: undefined
+  dashboard: undefined
   home: undefined
+  activity: undefined
+  history: undefined
+  profile: undefined
   satwa: undefined
   welcome: undefined
   demo: undefined
@@ -47,26 +51,26 @@ const dasboard = () => {
       barStyle={{ backgroundColor: '#FAFAFA' }}
       shifting={false}
       activeColor={color.palette.primary}
-      inactiveColor={color.palette.primary}>
-      <Tab.Screen name="Home" component={HomeScreen} options={{
+      inactiveColor={color.palette.lightGrey}>
+      <Tab.Screen name="home" component={HomeScreen} options={{
         tabBarLabel: 'Home',
         tabBarIcon: ({ color }) => (
           <Icofont name="home" color={color} size={26} />
         )
       }} />
-      <Tab.Screen name="Form" component={HomeScreen} options={{
+      <Tab.Screen name="activity" component={ActivityScreen} options={{
         tabBarLabel: 'Form',
         tabBarIcon: ({ color }) => (
           <Icofont name="view-compact" color={color} size={26} />
         )
       }} />
-      <Tab.Screen name="Histori" component={HomeScreen} options={{
+      <Tab.Screen name="history" component={HistoryScreen} options={{
         tabBarLabel: 'Histori',
         tabBarIcon: ({ color }) => (
           <Icofont name="calendar-check-outline" color={color} size={26} />
         )
       }} />
-      <Tab.Screen name="Account" component={HomeScreen} options={{
+      <Tab.Screen name="profile" component={ProfileScreen} options={{
         tabBarLabel: 'Saya',
         tabBarIcon: ({ color }) => (
           <Icofont name="account-circle-outline" color={color} size={26} />
@@ -83,7 +87,7 @@ const AppStack = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name="home" component={dasboard} />
+      <Stack.Screen name="dashboard" component={dasboard} />
       <Stack.Screen name="satwa" component={SatwaScreen} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />

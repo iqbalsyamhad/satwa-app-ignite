@@ -17,8 +17,9 @@ const ROOT: ViewStyle = {
 
 export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = observer(
   ({ navigation }) => {
-    const { authenticationStore } = useStores();
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(true);
+    const { authenticationStore } = useStores();
     type FormValues = {
       email: string;
       password: string;
@@ -28,7 +29,9 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
       return console.log(errors)
     }
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
+      setLoading(true);
       await authenticationStore.login(data.email, data.password);
+      setLoading(false);
     }
 
     return (
@@ -55,6 +58,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             />
           </FormProvider>
           <Button
+            loading={loading}
             style={{ marginTop: spacing[5] }}
             text="Log In"
             onPress={methods.handleSubmit(onSubmit, onError)}
