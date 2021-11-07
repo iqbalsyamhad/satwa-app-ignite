@@ -57,13 +57,13 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             <Paragraph style={{ color: color.palette.white }}><Icofont name="plus-circle-outline" size={16} /> Simpan</Paragraph>
           </Button>
         </View>
-        <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[2] }} />
+        <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[4] }} />
         <Subheading style={{ marginVertical: 0 }}>Tanggal:</Subheading>
         <TouchableOpacity style={{
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between',
-          marginTop: spacing[2],
+          marginVertical: spacing[2],
           padding: spacing[2],
           paddingHorizontal: spacing[4],
           backgroundColor: color.palette.bgForms,

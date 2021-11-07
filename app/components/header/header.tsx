@@ -4,7 +4,7 @@ import { Button } from "../button/button"
 import { Icon } from "../icon/icon"
 import { translate } from "../../i18n/"
 import { Appbar } from "react-native-paper"
-import { color } from "../../theme"
+import { color, spacing } from "../../theme"
 
 /**
  * Header that appears on many screens. Will hold navigation buttons and screen title.
@@ -19,7 +19,8 @@ export function Header(props: HeaderProps) {
   const header = headerText || (headerTx && translate(headerTx)) || ""
 
   return (
-    <Appbar.Header theme={{ colors: { primary: color.palette.white } }}>
+    <Appbar.Header style={{ marginTop: 0 }}
+      theme={{ colors: { primary: color.palette.white } }}>
       {leftIcon == "back" &&
         <Appbar.BackAction onPress={onLeftPress} />
       }

@@ -34,7 +34,10 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     }
     return (
       <Screen style={ROOT} header={<></>}>
-        <View style={{ paddingHorizontal: spacing[5] }}>
+        <View style={{
+          paddingTop: spacing[5],
+          paddingHorizontal: spacing[5],
+        }}>
           <Image source={require('../../../assets/images/SipesatLogo2.png')}
             style={{ width: 140 }}
             resizeMode={'contain'} />
