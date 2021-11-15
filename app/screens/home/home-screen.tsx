@@ -35,7 +35,6 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
     return (
       <Screen style={ROOT} header={<></>}>
         <View style={{
-          paddingTop: spacing[5],
           paddingHorizontal: spacing[5],
         }}>
           <Image source={require('../../../assets/images/SipesatLogo2.png')}
@@ -50,15 +49,21 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             />
           }>
           <View style={{ flexDirection: 'row' }}>
-            <View style={[primaryBox, { flex: 1, padding: spacing[3] }]}>
-              <Icofont name="view-compact" size={50} color={color.palette.white} />
-              <Subheading style={{ color: color.palette.white }}>Buat Aktivitas</Subheading>
-            </View>
+            <TouchableOpacity style={{ flex: 1 }}
+              onPress={() => props.navigation.navigate("activity")}>
+              <View style={[primaryBox, { padding: spacing[3] }]}>
+                <Icofont name="view-compact" size={50} color={color.palette.white} />
+                <Subheading style={{ color: color.palette.white }}>Buat Aktivitas</Subheading>
+              </View>
+            </TouchableOpacity>
             <View style={{ width: spacing[4] }} />
-            <View style={[primaryBox, { flex: 1, padding: spacing[3] }]}>
-              <Icofont name="calendar-check-outline" size={50} color={color.palette.white} />
-              <Subheading style={{ color: color.palette.white }}>Lihat Histori</Subheading>
-            </View>
+            <TouchableOpacity style={{ flex: 1 }}
+              onPress={() => props.navigation.navigate("history")}>
+              <View style={[primaryBox, { padding: spacing[3] }]}>
+                <Icofont name="calendar-check-outline" size={50} color={color.palette.white} />
+                <Subheading style={{ color: color.palette.white }}>Lihat Histori</Subheading>
+              </View>
+            </TouchableOpacity>
           </View>
           <Divider style={{ borderColor: color.palette.primary, borderWidth: 0.5, marginVertical: spacing[4] }} />
           <View style={[primaryBox, { alignItems: 'stretch' }]}>
@@ -90,19 +95,27 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               </View>
             </View>
             <Divider style={{ borderColor: color.palette.white, borderWidth: 0.5 }} />
-            <TouchableOpacity style={{ alignSelf: 'center' }}>
+            <TouchableOpacity style={{ alignSelf: 'center' }}
+              onPress={() => props.navigation.navigate("satwa")}>
               <Paragraph style={{ color: color.palette.white, marginVertical: spacing[2] }}>Lihat Data</Paragraph>
             </TouchableOpacity>
           </View>
-          <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
-            <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Stok Pakan</Title>
-          </View>
-          <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
-            <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Permasalahan Pakan</Title>
-          </View>
-          <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
-            <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Update Satwa</Title>
-          </View>
+          <TouchableOpacity onPress={() => props.navigation.navigate("pakanStok")}>
+            <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
+              <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Stok Pakan</Title>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => props.navigation.navigate("pakanMasalah")}>
+            <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
+              <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Permasalahan Pakan</Title>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => props.navigation.navigate("satwaUpdate")}>
+            <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
+              <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Update Satwa</Title>
+            </View>
+          </TouchableOpacity>
+          <View style={{ height: spacing[5] }} />
         </ScrollView>
       </Screen>
     )

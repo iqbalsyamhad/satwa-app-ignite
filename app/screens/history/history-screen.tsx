@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { RefreshControl, ScrollView, View, ViewStyle } from "react-native"
+import { RefreshControl, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Header, Screen } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -89,7 +89,11 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
                     <Paragraph style={{ color: color.palette.white }}>{data.status}</Paragraph>
                   </View>
                 </DataTable.Cell>
-                <DataTable.Cell><Icofont name="eye" size={18} /></DataTable.Cell>
+                <DataTable.Cell>
+                  <TouchableOpacity onPress={() => props.navigation.navigate("historyDetail")}>
+                    <Icofont name="eye" size={18} />
+                  </TouchableOpacity>
+                </DataTable.Cell>
               </DataTable.Row>
             )}
 
