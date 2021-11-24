@@ -20,15 +20,18 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
   (props) => {
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
-    const { historiesStore } = useStores();
+    const { formActivitiesStore } = useStores();
+
     useEffect(() => {
-      getHistories(page);
+      getFormActivities(page);
     }, [page]);
-    const getHistories = async (page) => {
+
+    const getFormActivities = async (page) => {
       setLoading(true);
-      await historiesStore.getHistories(page);
+      await formActivitiesStore.getAllFormActivities(page);
       setLoading(false);
     };
+    
     return (
       <Screen style={ROOT} header={
         <Header
@@ -70,7 +73,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
               <DataTable.Title style={{ flex: 2 }}>Status</DataTable.Title>
               <DataTable.Title>x</DataTable.Title>
             </DataTable.Header>
-            {historiesStore.histories?.data.map(data =>
+            {formActivitiesStore.formactivities?.data.map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 3 }}>{data.tanggal}</DataTable.Cell>
@@ -98,10 +101,10 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
             )}
 
             <DataTable.Pagination
-              page={historiesStore.histories?.page}
-              numberOfPages={historiesStore.histories?.totalPage}
+              page={formActivitiesStore.formactivities?.page}
+              numberOfPages={formActivitiesStore.formactivities?.totalPage}
               onPageChange={(page) => { }}
-              label={`Halaman ${historiesStore.histories?.page} dari ${historiesStore.histories?.totalPage}`}
+              label={`Halaman ${formActivitiesStore.formactivities?.page} dari ${formActivitiesStore.formactivities?.totalPage}`}
             />
           </DataTable>
         </ScrollView>

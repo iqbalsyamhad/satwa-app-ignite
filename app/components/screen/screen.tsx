@@ -49,10 +49,9 @@ function ScreenWithScrolling(props: ScreenProps) {
     >
       <StatusBar backgroundColor={color.palette.white} barStyle={props.statusBar || "dark-content"} />
       {header}
-      <SafeAreaView style={[preset.outer, backgroundStyle]}>
+      <SafeAreaView style={[preset.inner, style]}>
         <ScrollView
-          style={[preset.outer, backgroundStyle]}
-          contentContainerStyle={[preset.inner, style]}
+          showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={props.keyboardShouldPersistTaps || "handled"}
         >
           {props.children}

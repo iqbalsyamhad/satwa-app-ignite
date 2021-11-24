@@ -36,7 +36,7 @@ export const TextField = (props) => {
       containerStyle
     ]}>
       <TextInput
-        style={{ backgroundColor: 'transparent' }}
+        style={{ backgroundColor: 'transparent', height: 50 }}
         underlineColor={'transparent'}
         onChangeText={field.onChange}
         onBlur={field.onBlur}

@@ -1,7 +1,7 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { SatwaStoreModel } from "../satwa-store/satwa-store"
 import { AuthenticationStoreModel } from "../authentication-store/authentication-store"
-import { HistoriesStoreModel } from "../histories-store/histories-store"
+import { SatwaStoreModel } from "../satwa-store/satwa-store"
+import { FormActivityStoreModel } from "../form-activity-store/form-activity-store"
 
 /**
  * A RootStore model.
@@ -9,8 +9,8 @@ import { HistoriesStoreModel } from "../histories-store/histories-store"
 // prettier-ignore
 export const RootStoreModel = types.model("RootStore").props({
   authenticationStore: types.optional(AuthenticationStoreModel, {} as any),
-  historiesStore: types.optional(HistoriesStoreModel, {} as any),
   satwaStore: types.optional(SatwaStoreModel, {} as any),
+  formActivitiesStore: types.optional(FormActivityStoreModel, {} as any),
 })
 
 /**

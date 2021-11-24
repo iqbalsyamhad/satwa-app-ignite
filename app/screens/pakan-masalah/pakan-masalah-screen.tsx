@@ -42,7 +42,7 @@ export const PakanMasalahScreen: FC<StackScreenProps<NavigatorParamList, "pakanM
           />
         </View>
         <Button
-          onPress={() => console.warn('ok')}
+          onPress={() => props.navigation.navigate('pakanMasalahNew')}
           preset="small"
           style={{
             marginHorizontal: spacing[5],

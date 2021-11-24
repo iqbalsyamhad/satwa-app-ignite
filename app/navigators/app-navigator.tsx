@@ -9,7 +9,7 @@ import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen, HistoryDetailScreen, PakanStokScreen, PakanMasalahScreen, SatwaUpdateScreen, SatwaUpdateNewScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen, HistoryDetailScreen, PakanStokScreen, PakanMasalahScreen, SatwaUpdateScreen, SatwaUpdateNewScreen, PakanMasalahNewScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models"
@@ -41,6 +41,7 @@ export type NavigatorParamList = {
   satwaUpdateNew: undefined
   pakanStok: undefined
   pakanMasalah: undefined
+  pakanMasalahNew: undefined
   welcome: undefined
   demo: undefined
   demoList: undefined
@@ -99,6 +100,7 @@ const AppStack = () => {
       <Stack.Screen name="satwaUpdateNew" component={SatwaUpdateNewScreen} />
       <Stack.Screen name="pakanStok" component={PakanStokScreen} />
       <Stack.Screen name="pakanMasalah" component={PakanMasalahScreen} />
+      <Stack.Screen name="pakanMasalahNew" component={PakanMasalahNewScreen} />
 
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="demo" component={DemoScreen} />
