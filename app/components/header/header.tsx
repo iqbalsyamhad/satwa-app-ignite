@@ -13,6 +13,8 @@ export function Header(props: HeaderProps) {
   const {
     onLeftPress,
     leftIcon,
+    onRightPress,
+    rightIcon,
     headerText,
     headerTx,
   } = props
@@ -25,6 +27,9 @@ export function Header(props: HeaderProps) {
         <Appbar.BackAction onPress={onLeftPress} />
       }
       <Appbar.Content title={header} />
+      {rightIcon &&
+        <Appbar.Action icon={rightIcon} onPress={onRightPress} />
+      }
     </Appbar.Header>
   )
 }

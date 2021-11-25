@@ -115,6 +115,11 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Update Satwa</Title>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => props.navigation.navigate("peralatanStok")}>
+            <View style={[primaryBox, { alignItems: 'flex-start', marginTop: spacing[3], padding: spacing[1], paddingHorizontal: spacing[3] }]}>
+              <Title style={{ color: color.palette.white }}><Icofont name="layers" size={22} />  Stok Peralatan</Title>
+            </View>
+          </TouchableOpacity>
           <View style={{ height: spacing[5] }} />
         </ScrollView>
       </Screen>

@@ -1,5 +1,6 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { FormActivityItemModel } from "../form-activity-item/form-activity-item"
+import { SatwaModel } from "../satwa/satwa"
 
 /**
  * Model description here for TypeScript hints.
@@ -10,6 +11,7 @@ export const FormActivityModel = types
     id: types.maybe(types.integer),
     tanggal: types.maybe(types.string),
     satwaId: types.maybe(types.integer),
+    satwa: types.optional(SatwaModel, {}),
     userId: types.maybe(types.integer),
     activities: types.optional(types.array(FormActivityItemModel), []),
     status: types.maybe(types.string),

@@ -16,7 +16,7 @@ export interface HeaderProps {
   /**
    * Icon that should appear on the left
    */
-  leftIcon?: IconTypes
+  leftIcon?: string
 
   /**
    * What happens when you press the left icon
@@ -26,7 +26,7 @@ export interface HeaderProps {
   /**
    * Icon that should appear on the right
    */
-  rightIcon?: IconTypes
+  rightIcon?: string
 
   /**
    * What happens when you press the right icon
