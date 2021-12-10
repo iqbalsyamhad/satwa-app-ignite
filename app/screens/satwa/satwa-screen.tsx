@@ -74,9 +74,9 @@ export const SatwaScreen: FC<StackScreenProps<NavigatorParamList, "satwa">> = ob
             {satwaStore.satwa?.map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 3 }}>{data.name}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 2 }}>{data.category}</DataTable.Cell>
-                <DataTable.Cell>{data.qty}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 3 }}>{data.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>{data.jenis_satwa.nama}</DataTable.Cell>
+                <DataTable.Cell>{data.jumlah}</DataTable.Cell>
               </DataTable.Row>
             )}
           </DataTable>

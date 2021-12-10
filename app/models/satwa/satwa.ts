@@ -1,4 +1,5 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { SatwaJenisModel } from "../satwa-jenis/satwa-jenis"
 
 /**
  * Model description here for TypeScript hints.
@@ -7,9 +8,9 @@ export const SatwaModel = types
   .model("Satwa")
   .props({
     id: types.maybe(types.integer),
-    name: types.maybe(types.string),
-    // category: types.maybe(types.string),
-    qty: types.maybe(types.integer),
+    nama: types.maybe(types.string),
+    jumlah: types.maybe(types.integer),
+    jenis_satwa: types.optional(SatwaJenisModel, {}),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

@@ -1,7 +1,7 @@
 import { flow } from "mobx";
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
 import { AuthenticationModel, AuthenticationSnapshot } from "../authentication/authentication";
-import { LoginResult, LogoutResult } from "../../services/api";
+import { LoginResult } from "../../services/api";
 import { AuthenticationApi } from "../../services/api/authentication/authentication-api";
 import { withEnvironment } from "../extensions/with-environment"
 import { withRootStore } from "../extensions/with-root-store"
@@ -51,6 +51,7 @@ export const AuthenticationStoreModel = types
 
     logout: flow(function* () {
       self.setAuthenticated(false);
+      self.environment.api.setAuthorizationHeader();
     }),
   }))
 

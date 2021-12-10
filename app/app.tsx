@@ -69,20 +69,18 @@ function App() {
 
   // otherwise, we're ready to render the app
   return (
-    <ToggleStorybook>
-      <RootStoreProvider value={rootStore}>
-        <PaperProvider theme={paperTheme}>
-          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-            <ErrorBoundary catchErrors={"always"}>
-              <AppNavigator
-                initialState={initialNavigationState}
-                onStateChange={onNavigationStateChange}
-              />
-            </ErrorBoundary>
-          </SafeAreaProvider>
-        </PaperProvider>
-      </RootStoreProvider>
-    </ToggleStorybook>
+    <RootStoreProvider value={rootStore}>
+      <PaperProvider theme={paperTheme}>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <ErrorBoundary catchErrors={"always"}>
+            <AppNavigator
+              initialState={initialNavigationState}
+              onStateChange={onNavigationStateChange}
+            />
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      </PaperProvider>
+    </RootStoreProvider>
   )
 }
 

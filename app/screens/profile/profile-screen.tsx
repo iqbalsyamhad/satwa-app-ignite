@@ -48,7 +48,7 @@ export const ProfileScreen: FC<StackScreenProps<NavigatorParamList, "profile">> 
           <Image source={require('../../../assets/images/profile.png')}
             style={{ width: 60 }}
             resizeMode={'contain'} />
-          <Title style={{ marginTop: spacing[3] }}>{authenticationStore.user?.name}</Title>
+          <Title style={{ marginTop: spacing[3] }}>{authenticationStore.user?.nama}</Title>
           <Caption>Perawat Satwa</Caption>
           <View style={{ height: spacing[6] }} />
           <List.Item

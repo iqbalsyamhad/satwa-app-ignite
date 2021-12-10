@@ -14,10 +14,11 @@ export class SatwaApi {
         try {
             console.log("api satwa start!")
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                "/satwa.json",
+                "/api/satwa",
             );
 
             if (!response.ok) {
+                console.log("fail!"+JSON.stringify(response))
                 const problem = getGeneralApiProblem(response);
                 if (problem) return problem;
             }
@@ -27,6 +28,7 @@ export class SatwaApi {
 
             return { kind: "ok", satwa };
         } catch (error) {
+            console.log("err!"+JSON.stringify(error))
             __DEV__ && console.tron.log(error.message);
             return { kind: "bad-data" };
         }

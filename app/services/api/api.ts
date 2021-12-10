@@ -44,6 +44,14 @@ export class Api {
     })
   }
 
+  setAuthorizationHeader = (newToken?: string) => {
+    if (newToken) {
+      this.apisauce.setHeader("Authorization", `Bearer ${newToken}`)
+    } else {
+      this.apisauce.deleteHeader("Authorization")
+    }
+  }
+
   /**
    * Gets a list of users.
    */
