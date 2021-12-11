@@ -40,6 +40,7 @@ export const AuthenticationStoreModel = types
 
       if (result.kind === "ok") {
         self.setStatus("done");
+        self.environment.api.setAuthorizationHeader(result.user.token)
         self.setAuthenticated(true);
         self.setUser(result.user);
       } else {
@@ -50,8 +51,8 @@ export const AuthenticationStoreModel = types
     }),
 
     logout: flow(function* () {
-      self.setAuthenticated(false);
       self.environment.api.setAuthorizationHeader();
+      self.setAuthenticated(false);
     }),
   }))
 

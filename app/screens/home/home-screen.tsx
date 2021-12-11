@@ -96,7 +96,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
             </View>
             <Divider style={{ borderColor: color.palette.white, borderWidth: 0.5 }} />
             <TouchableOpacity style={{ alignSelf: 'center' }}
-              onPress={() => props.navigation.navigate("satwa")}>
+              onPress={() => props.navigation.navigate("satwaJenis")}>
               <Paragraph style={{ color: color.palette.white, marginVertical: spacing[2] }}>Lihat Data</Paragraph>
             </TouchableOpacity>
           </View>

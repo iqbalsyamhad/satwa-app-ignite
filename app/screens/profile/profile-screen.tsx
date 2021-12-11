@@ -49,7 +49,7 @@ export const ProfileScreen: FC<StackScreenProps<NavigatorParamList, "profile">> 
             style={{ width: 60 }}
             resizeMode={'contain'} />
           <Title style={{ marginTop: spacing[3] }}>{authenticationStore.user?.nama}</Title>
-          <Caption>Perawat Satwa</Caption>
+          <Caption>{authenticationStore.user?.role}</Caption>
           <View style={{ height: spacing[6] }} />
           <List.Item
             style={{ paddingLeft: 0 }}

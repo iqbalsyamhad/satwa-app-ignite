@@ -69,14 +69,16 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
               borderBottomColor: color.primary
             }}>
               <DataTable.Title>No.</DataTable.Title>
-              <DataTable.Title style={{ flex: 3 }}>Tanggal</DataTable.Title>
+              <DataTable.Title style={{ flex: 2 }}>Tanggal</DataTable.Title>
+              <DataTable.Title style={{ flex: 2 }}>Satwa</DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Status</DataTable.Title>
               <DataTable.Title>x</DataTable.Title>
             </DataTable.Header>
             {formActivitiesStore.formactivities?.data.map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 3 }}>{data.tanggal}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>{data.tanggal}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>{data.satwa.nama}</DataTable.Cell>
                 <DataTable.Cell style={{
                   flex: 2,
                   paddingTop: spacing[1]
@@ -87,7 +89,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
                     borderRadius: spacing[2],
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: 'green'
+                    backgroundColor: data.status == 'Diterima' ? 'green' : 'orange'
                   }}>
                     <Paragraph style={{ color: color.palette.white }}>{data.status}</Paragraph>
                   </View>

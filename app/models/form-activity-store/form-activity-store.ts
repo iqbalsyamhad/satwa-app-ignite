@@ -40,9 +40,9 @@ export const FormActivityStoreModel = types
         __DEV__ && console.tron.log(result.kind)
       }
     },
-    getFormActivity: async () => {
+    getFormActivity: async (date, satwaId) => {
       const formActivityApi = new FormActivityApi(self.environment.api)
-      const result = await formActivityApi.getOneFormActivity(1)
+      const result = await formActivityApi.getOneFormActivity(null, date, satwaId)
 
       if (result.kind === "ok") {
         self.saveFormActivity(result.formactivity)
@@ -50,10 +50,20 @@ export const FormActivityStoreModel = types
         __DEV__ && console.tron.log(result.kind)
       }
     },
+    updateActivityItem: async (collection) => {
+      const formActivityApi = new FormActivityApi(self.environment.api)
+      const result = await formActivityApi.updateActivityItem(collection)
+
+      if (result.kind === "ok") {
+        //
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    },
   }))
 
 type FormActivityStoreType = Instance<typeof FormActivityStoreModel>
-export interface FormActivityStore extends FormActivityStoreType {}
+export interface FormActivityStore extends FormActivityStoreType { }
 type FormActivityStoreSnapshotType = SnapshotOut<typeof FormActivityStoreModel>
-export interface FormActivityStoreSnapshot extends FormActivityStoreSnapshotType {}
+export interface FormActivityStoreSnapshot extends FormActivityStoreSnapshotType { }
 export const createFormActivityStoreDefaultModel = () => types.optional(FormActivityStoreModel, {})

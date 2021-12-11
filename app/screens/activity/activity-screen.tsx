@@ -14,56 +14,12 @@ import moment from "moment";
 import CalendarPicker from 'react-native-calendar-picker';
 import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useStores } from "../../models"
+import { ActivityItem } from "./activity-list"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
   flex: 1,
   paddingHorizontal: spacing[5]
-}
-
-const SelectItem = (props) => {
-  return (
-    <TouchableOpacity onPress={() => props.open()}>
-      <View style={{
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginVertical: spacing[2],
-        backgroundColor: color.palette.bgForms,
-        borderRadius: spacing[3],
-        padding: spacing[2],
-        paddingHorizontal: spacing[4],
-        borderWidth: 0.5,
-        borderColor: "#A7B0C0",
-      }}>
-        <Subheading style={{ flex: 1 }}>{props.label}</Subheading>
-        <Icofont name="chevron-down" color={color.primary} size={24} />
-      </View>
-    </TouchableOpacity>
-  )
-}
-
-const ActivityItem = (props) => {
-  let { data } = props;
-  let isActive = data.activityResult == 'done'
-  return (
-    <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      backgroundColor: isActive ? color.palette.primary : color.palette.bgForms,
-      marginTop: spacing[3],
-      borderRadius: spacing[3],
-      padding: spacing[1],
-      paddingHorizontal: spacing[4],
-      borderWidth: 0.5,
-      borderColor: "#A7B0C0",
-    }}>
-      <Checkbox
-        color={color.palette.white}
-        status={isActive ? 'checked' : 'unchecked'}
-      />
-      <Subheading style={{ marginLeft: spacing[2], color: isActive ? color.palette.white : color.palette.primary }}>{data.activity.name}</Subheading>
-    </View>
-  )
 }
 
 export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">> = observer(
@@ -85,6 +41,10 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
     }, [date]);
 
     useEffect(() => {
+      modalizeRef.current?.close();
+    }, [satwa]);
+
+    useEffect(() => {
       formActivitiesStore.resetFormActivity();
     }, [date, satwa]);
 
@@ -97,8 +57,29 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
 
     const fetchActivities = async () => {
       setLoading(true);
-      await formActivitiesStore.getFormActivity();
+      await formActivitiesStore.getFormActivity(date, satwa?.id);
       setLoading(false);
+    }
+
+    const SelectItem = (props) => {
+      return (
+        <TouchableOpacity onPress={() => props.open()}>
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: spacing[2],
+            backgroundColor: color.palette.bgForms,
+            borderRadius: spacing[3],
+            padding: spacing[2],
+            paddingHorizontal: spacing[4],
+            borderWidth: 0.5,
+            borderColor: "#A7B0C0",
+          }}>
+            <Subheading style={{ flex: 1 }}>{props.label}</Subheading>
+            <Icofont name="chevron-down" color={color.primary} size={24} />
+          </View>
+        </TouchableOpacity>
+      )
     }
 
     return (
@@ -137,12 +118,20 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             <Icofont name="calendar" size={24} color={color.primary} />
           </TouchableOpacity>
           <Subheading style={{ marginVertical: 0 }}>Satwa:</Subheading>
-          <SelectItem label={satwa?.name || 'Pilih Satwa'} open={() => openModal()} />
+          <SelectItem label={satwa?.nama || 'Pilih Satwa'} open={() => openModal()} />
+          {!formActivitiesStore.formactivity.list_aktivitas.length &&
+            <Button
+              preset="small"
+              style={{ marginTop: spacing[3] }}
+              onPress={() => fetchActivities()}>
+              <Paragraph style={{ color: color.palette.white }}><Icofont name="magnify" size={16} /> Tampilkan</Paragraph>
+            </Button>
+          }
           {loading ?
             <ActivityIndicator style={{ margin: spacing[4] }} />
             :
-            formActivitiesStore.formactivity.activities?.map(activity =>
-              <ActivityItem key={activity.id} data={activity} />
+            formActivitiesStore.formactivity.list_aktivitas?.map(activity =>
+              <ActivityItem key={activity.id} data={activity} refresh={() => fetchActivities()} />
             )
           }
         </Screen>
@@ -193,15 +182,17 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
           </View>
           {satwaLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
           {satwaStore.satwa.map(satwa =>
-            <View key={satwa.id}
-              style={{
-                padding: spacing[2],
-                backgroundColor: color.palette.primary,
-                borderRadius: spacing[2],
-                marginTop: spacing[2],
-              }}>
-              <Subheading style={{ color: 'white' }}>{satwa.name}</Subheading>
-            </View>
+            <TouchableOpacity key={satwa.id} onPress={() => setSatwa(satwa)}>
+              <View
+                style={{
+                  padding: spacing[2],
+                  backgroundColor: color.palette.primary,
+                  borderRadius: spacing[2],
+                  marginTop: spacing[2],
+                }}>
+                <Subheading style={{ color: 'white' }}>{satwa.nama}</Subheading>
+              </View>
+            </TouchableOpacity>
           )}
         </Modalize>
       </>

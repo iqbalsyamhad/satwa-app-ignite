@@ -10,8 +10,8 @@ export const ActivityModel = types
     id: types.maybe(types.integer),
     name: types.maybe(types.string),
     activityInput: types.maybe(types.string),
-    activityOptions: types.optional(types.array(ActivityOptionModel), []),
     activityType: types.maybe(types.string),
+    options: types.optional(types.array(ActivityOptionModel), []),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

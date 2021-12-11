@@ -10,10 +10,10 @@ export const FormActivityModel = types
   .props({
     id: types.maybe(types.integer),
     tanggal: types.maybe(types.string),
-    satwaId: types.maybe(types.integer),
+    id_satwa: types.maybe(types.integer),
     satwa: types.optional(SatwaModel, {}),
-    userId: types.maybe(types.integer),
-    activities: types.optional(types.array(FormActivityItemModel), []),
+    id_pelaksana: types.maybe(types.integer),
+    list_aktivitas: types.optional(types.array(FormActivityItemModel), []),
     status: types.maybe(types.string),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

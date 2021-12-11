@@ -9,7 +9,7 @@ import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen, HistoryDetailScreen, PakanStokScreen, PakanMasalahScreen, SatwaUpdateScreen, SatwaUpdateNewScreen, PakanMasalahNewScreen, PeralatanStokScreen, PeralatanUsesScreen, PeralatanUsesNewScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen, HistoryDetailScreen, PakanStokScreen, PakanMasalahScreen, SatwaUpdateScreen, SatwaUpdateNewScreen, PakanMasalahNewScreen, PeralatanStokScreen, PeralatanUsesScreen, PeralatanUsesNewScreen, SatwaJenisScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models"
@@ -37,6 +37,7 @@ export type NavigatorParamList = {
   historyDetail: undefined
   profile: undefined
   satwa: undefined
+  satwaJenis: undefined
   satwaUpdate: undefined
   satwaUpdateNew: undefined
   pakanStok: undefined
@@ -99,6 +100,7 @@ const AppStack = () => {
       <Stack.Screen name="dashboard" component={dasboard} />
       <Stack.Screen name="historyDetail" component={HistoryDetailScreen} />
       <Stack.Screen name="satwa" component={SatwaScreen} />
+      <Stack.Screen name="satwaJenis" component={SatwaJenisScreen} />
       <Stack.Screen name="satwaUpdate" component={SatwaUpdateScreen} />
       <Stack.Screen name="satwaUpdateNew" component={SatwaUpdateNewScreen} />
       <Stack.Screen name="pakanStok" component={PakanStokScreen} />
