@@ -40,9 +40,9 @@ export const FormActivityStoreModel = types
         __DEV__ && console.tron.log(result.kind)
       }
     },
-    getFormActivity: async (date, satwaId) => {
+    getFormActivity: async (id = null, date = null, satwaId = null) => {
       const formActivityApi = new FormActivityApi(self.environment.api)
-      const result = await formActivityApi.getOneFormActivity(null, date, satwaId)
+      const result = await formActivityApi.getOneFormActivity(id, date, satwaId)
 
       if (result.kind === "ok") {
         self.saveFormActivity(result.formactivity)
@@ -55,7 +55,18 @@ export const FormActivityStoreModel = types
       const result = await formActivityApi.updateActivityItem(collection)
 
       if (result.kind === "ok") {
-        //
+        if (result.data.message == "success") {
+          // let activity = self.formactivity;
+          // let index = activity.list_aktivitas.findIndex(i => i.id == collection.id);
+          // console.log('idx: ' + index);
+          // if (index >= 0) {
+          //   activity.list_aktivitas[index] = collection;
+          //   self.saveFormActivity(activity);
+          //   console.log('state chabged');
+          // }
+        } else {
+          alert(result.data.status);
+        }
       } else {
         __DEV__ && console.tron.log(result.kind)
       }

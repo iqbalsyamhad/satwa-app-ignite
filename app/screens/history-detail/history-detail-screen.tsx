@@ -1,15 +1,16 @@
-import React, { FC } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle } from "react-native"
+import { ScrollView, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
-import { Checkbox, Divider, Paragraph, Subheading } from "react-native-paper"
+import { ActivityIndicator, Checkbox, Divider, Paragraph, Subheading } from "react-native-paper"
 import moment from "moment"
 import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -17,29 +18,38 @@ const ROOT: ViewStyle = {
   paddingHorizontal: spacing[5]
 }
 
-const ActivityItem = (props) => {
-  return (
-    <View style={{
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: spacing[2],
-    }}>
-      <Checkbox
-        color={color.palette.black}
-        status={props.isActive ? 'checked' : 'unchecked'}
-      />
-      <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>Piket Bengkok</Subheading>
-    </View>
-  )
-}
-
 export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "historyDetail">> = observer(
   (props) => {
-    // Pull in one of our MST stores
-    // const { someStore, anotherStore } = useStores()
+    const { formActivitiesStore } = useStores();
+    const [loading, setLoading] = useState(false);
+    const id = props.route.params.id;
 
-    // Pull in navigation via hook
-    // const navigation = useNavigation()
+    useEffect(() => {
+      fetchActivities();
+    }, []);
+
+    const fetchActivities = async () => {
+      setLoading(true);
+      await formActivitiesStore.getFormActivity(id);
+      setLoading(false);
+    }
+
+    const ActivityItem = (props) => {
+      return (
+        <View style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          marginTop: spacing[2],
+        }}>
+          <Checkbox
+            color={color.palette.black}
+            status={props.activityResult == '1' ? 'checked' : 'unchecked'}
+          />
+          <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>Piket Bengkok</Subheading>
+        </View>
+      )
+    }
+
     return (
       <Screen style={ROOT} preset="scroll" header={
         <Header
@@ -48,25 +58,29 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
           headerText="Detail Histori"
         />
       }>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View style={{ flex: 1 }}>
-            <Subheading style={{ marginVertical: 0 }}>Periode:</Subheading>
-            <Subheading style={{ marginVertical: 0 }}>{moment(new Date()).format('MMMM YYYY')}</Subheading>
+        <ScrollView>
+          {loading && <ActivityIndicator />}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 1 }}>
+              <Subheading style={{ marginVertical: 0 }}>Periode:</Subheading>
+              <Subheading style={{ marginVertical: 0 }}>{moment(formActivitiesStore.formactivity.tanggal).format('MMMM YYYY')}</Subheading>
+            </View>
+            <View>
+              <Subheading style={{ marginVertical: 0 }}>Tanggal:</Subheading>
+              <Subheading style={{ marginVertical: 0 }}>{moment(formActivitiesStore.formactivity.tanggal).format('DD/MM/YYYY')}</Subheading>
+            </View>
           </View>
-          <View>
-            <Subheading style={{ marginVertical: 0 }}>Tanggal:</Subheading>
-            <Subheading style={{ marginVertical: 0 }}>{moment(new Date()).format('DD/MM/YYYY')}</Subheading>
-          </View>
-        </View>
-        <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
-        <ActivityItem isActive={true} />
-        <ActivityItem isActive={false} />
-        <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
-        <Subheading>Status: Diterima</Subheading>
-        <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
-        <Subheading>Pelaksana: </Subheading>
-        <Subheading>Koordinator: </Subheading>
-        <Subheading>Kadiv: </Subheading>
+          <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
+          {formActivitiesStore.formactivity.list_aktivitas.map(activity =>
+            <ActivityItem key={Math.random()} {...activity} />
+          )}
+          <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
+          <Subheading>{`Status: ${formActivitiesStore.formactivity.status}`}</Subheading>
+          <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
+          <Subheading>Pelaksana: </Subheading>
+          <Subheading>Koordinator: </Subheading>
+          <Subheading>Kadiv: </Subheading>
+        </ScrollView>
       </Screen>
     )
   })

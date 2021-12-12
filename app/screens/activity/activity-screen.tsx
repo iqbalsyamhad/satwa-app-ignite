@@ -22,48 +22,82 @@ const ROOT: ViewStyle = {
   paddingHorizontal: spacing[5]
 }
 
-export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">> = observer(
-  (props) => {
-    const { satwaStore, formActivitiesStore } = useStores();
-    const [loading, setLoading] = useState(false);
-    const [satwaLoading, setSatwaLoading] = useState(false);
-    const [showCalendar, setShowCalendar] = useState(false);
-    const [date, setDate] = useState(formActivitiesStore.formactivity?.tanggal);
-    const [satwa, setSatwa] = useState(formActivitiesStore.formactivity?.satwa);
-    const modalizeRef = useRef<Modalize>(null);
+export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">> = observer(({ navigation }) => {
+  const { satwaStore, formActivitiesStore } = useStores();
+  const { satwa, getAllSatwa } = satwaStore;
+  const [loading, setLoading] = useState(false);
+  const [satwaLoading, setSatwaLoading] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
+  const [satwa_, setSatwa_] = useState(null);
+  const modalizeRef = useRef<Modalize>(null);
 
-    useEffect(() => {
-      fetchActivities();
-    }, []);
+  useEffect(() => {
+    fetchActivities();
+  }, []);
 
-    useEffect(() => {
-      setShowCalendar(false);
-    }, [date]);
+  useEffect(() => {
+    setShowCalendar(false);
+  }, [date]);
 
-    useEffect(() => {
-      modalizeRef.current?.close();
-    }, [satwa]);
+  useEffect(() => {
+    modalizeRef.current?.close();
+  }, [satwa_]);
 
-    useEffect(() => {
-      formActivitiesStore.resetFormActivity();
-    }, [date, satwa]);
+  useEffect(() => {
+    formActivitiesStore.resetFormActivity();
+  }, [date, satwa_]);
 
-    const openModal = async () => {
-      modalizeRef.current?.open();
-      setSatwaLoading(true);
-      await satwaStore.getAllSatwa();
-      setSatwaLoading(false);
-    }
+  const openModal = async () => {
+    modalizeRef.current?.open();
+    setSatwaLoading(true);
+    await getAllSatwa();
+    setSatwaLoading(false);
+  }
 
-    const fetchActivities = async () => {
-      setLoading(true);
-      await formActivitiesStore.getFormActivity(date, satwa?.id);
-      setLoading(false);
-    }
+  const fetchActivities = async () => {
+    setLoading(true);
+    await formActivitiesStore.getFormActivity(null, date, satwa_?.id || null);
+    setLoading(false);
+  }
 
-    const SelectItem = (props) => {
-      return (
-        <TouchableOpacity onPress={() => props.open()}>
+  return (
+    <>
+      <Screen style={ROOT} preset="scroll" header={
+        <Header
+          headerText="Form Aktivitas"
+        />
+      }>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <View>
+            <Subheading style={{ marginVertical: 0 }}>Periode:</Subheading>
+            <Subheading style={{ marginVertical: 0 }}>{moment(new Date()).format('MMMM YYYY')}</Subheading>
+          </View>
+          <Button
+            preset="small">
+            <Paragraph style={{ color: color.palette.white }}><Icofont name="plus-circle-outline" size={16} /> Simpan</Paragraph>
+          </Button>
+        </View>
+        <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[4] }} />
+        <Subheading style={{ marginVertical: 0 }}>Tanggal:</Subheading>
+        <TouchableOpacity onPress={() => setShowCalendar(true)}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginVertical: spacing[2],
+            padding: spacing[2],
+            paddingHorizontal: spacing[4],
+            backgroundColor: color.palette.bgForms,
+            borderColor: '#A7B0C0',
+            borderRadius: spacing[3],
+            borderWidth: 0.5
+          }}>
+          <Subheading style={{ fontWeight: 'bold' }}>{moment(date).format('DD MMM YYYY')}</Subheading>
+          <Icofont name="calendar" size={24} color={color.primary} />
+        </TouchableOpacity>
+        <Subheading style={{ marginVertical: 0 }}>Satwa:</Subheading>
+        <TouchableOpacity onPress={() => openModal()}>
           <View style={{
             flexDirection: 'row',
             alignItems: 'center',
@@ -75,126 +109,86 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             borderWidth: 0.5,
             borderColor: "#A7B0C0",
           }}>
-            <Subheading style={{ flex: 1 }}>{props.label}</Subheading>
+            <Subheading style={{ flex: 1 }}>{satwa_?.nama || 'Pilih Satwa'}</Subheading>
             <Icofont name="chevron-down" color={color.primary} size={24} />
           </View>
         </TouchableOpacity>
-      )
-    }
-
-    return (
-      <>
-        <Screen style={ROOT} preset="scroll" header={
-          <Header
-            headerText="Form Aktivitas"
-          />
-        }>
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <View>
-              <Subheading style={{ marginVertical: 0 }}>Periode:</Subheading>
-              <Subheading style={{ marginVertical: 0 }}>{moment(new Date()).format('MMMM YYYY')}</Subheading>
-            </View>
-            <Button
-              preset="small">
-              <Paragraph style={{ color: color.palette.white }}><Icofont name="plus-circle-outline" size={16} /> Simpan</Paragraph>
-            </Button>
-          </View>
-          <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[4] }} />
-          <Subheading style={{ marginVertical: 0 }}>Tanggal:</Subheading>
-          <TouchableOpacity onPress={() => setShowCalendar(true)}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginVertical: spacing[2],
-              padding: spacing[2],
-              paddingHorizontal: spacing[4],
-              backgroundColor: color.palette.bgForms,
-              borderColor: '#A7B0C0',
-              borderRadius: spacing[3],
-              borderWidth: 0.5
-            }}>
-            <Subheading style={{ fontWeight: 'bold' }}>{moment(date).format('DD MMM YYYY')}</Subheading>
-            <Icofont name="calendar" size={24} color={color.primary} />
-          </TouchableOpacity>
-          <Subheading style={{ marginVertical: 0 }}>Satwa:</Subheading>
-          <SelectItem label={satwa?.nama || 'Pilih Satwa'} open={() => openModal()} />
-          {!formActivitiesStore.formactivity.list_aktivitas.length &&
-            <Button
-              preset="small"
-              style={{ marginTop: spacing[3] }}
-              onPress={() => fetchActivities()}>
-              <Paragraph style={{ color: color.palette.white }}><Icofont name="magnify" size={16} /> Tampilkan</Paragraph>
-            </Button>
-          }
-          {loading ?
-            <ActivityIndicator style={{ margin: spacing[4] }} />
-            :
-            formActivitiesStore.formactivity.list_aktivitas?.map(activity =>
-              <ActivityItem key={activity.id} data={activity} refresh={() => fetchActivities()} />
-            )
-          }
-        </Screen>
-        <Modal
-          isVisible={showCalendar}
-          onBackdropPress={() => setShowCalendar(false)}
-          style={{ margin: 0 }}>
-          <View style={{ flex: 1, justifyContent: 'flex-end' }}>
-            <View style={{ backgroundColor: 'white', paddingVertical: spacing[4] }}>
-              <CalendarPicker
-                selectedStartDate={date}
-                selectedDayColor={color.primary}
-                selectedDayTextColor={color.palette.white}
-                onDateChange={(date) => setDate(moment(date).format('YYYY-MM-DD'))}
-              />
-            </View>
-          </View>
-        </Modal>
-        <Modalize
-          ref={modalizeRef}
-          modalTopOffset={50}
-          snapPoint={420}
-          modalStyle={{
-            padding: spacing[3]
-          }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <View style={{ flex: 1 }}>
-              <Title>Data Satwa</Title>
-            </View>
-            <TouchableOpacity onPress={() => modalizeRef.current?.close()}>
-              <Icofont name="close" size={20} />
-            </TouchableOpacity>
-          </View>
-          <View style={{
-            backgroundColor: color.palette.bgForms,
-            marginVertical: spacing[3],
-            borderWidth: 1,
-            borderColor: '#E7ECF3',
-            borderRadius: spacing[3],
-            overflow: 'hidden'
-          }}>
-            <TextInput
-              style={{ marginVertical: -spacing[2], backgroundColor: 'transparent' }}
-              underlineColor={'transparent'}
-              left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
-              placeholder={'Cari'}
+        {!formActivitiesStore.formactivity.list_aktivitas.length &&
+          <Button
+            preset="small"
+            style={{ marginTop: spacing[3] }}
+            onPress={() => fetchActivities()}>
+            <Paragraph style={{ color: color.palette.white }}><Icofont name="magnify" size={16} /> Tampilkan</Paragraph>
+          </Button>
+        }
+        {loading ?
+          <ActivityIndicator style={{ margin: spacing[4] }} />
+          :
+          formActivitiesStore.formactivity.list_aktivitas?.map(activity =>
+            <ActivityItem key={activity.id} data={activity} refresh={() => fetchActivities()} />
+          )
+        }
+      </Screen>
+      <Modal
+        isVisible={showCalendar}
+        onBackdropPress={() => setShowCalendar(false)}
+        style={{ margin: 0 }}>
+        <View style={{ flex: 1, justifyContent: 'flex-end' }}>
+          <View style={{ backgroundColor: 'white', paddingVertical: spacing[4] }}>
+            <CalendarPicker
+              selectedStartDate={date}
+              selectedDayColor={color.primary}
+              selectedDayTextColor={color.palette.white}
+              onDateChange={(date) => setDate(moment(date).format('YYYY-MM-DD'))}
             />
           </View>
-          {satwaLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-          {satwaStore.satwa.map(satwa =>
-            <TouchableOpacity key={satwa.id} onPress={() => setSatwa(satwa)}>
-              <View
-                style={{
-                  padding: spacing[2],
-                  backgroundColor: color.palette.primary,
-                  borderRadius: spacing[2],
-                  marginTop: spacing[2],
-                }}>
-                <Subheading style={{ color: 'white' }}>{satwa.nama}</Subheading>
-              </View>
-            </TouchableOpacity>
-          )}
-        </Modalize>
-      </>
-    )
-  })
+        </View>
+      </Modal>
+      <Modalize
+        ref={modalizeRef}
+        modalTopOffset={50}
+        snapPoint={420}
+        modalStyle={{
+          padding: spacing[3]
+        }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ flex: 1 }}>
+            <Title>Data Satwa</Title>
+          </View>
+          <TouchableOpacity onPress={() => modalizeRef.current?.close()}>
+            <Icofont name="close" size={20} />
+          </TouchableOpacity>
+        </View>
+        <View style={{
+          backgroundColor: color.palette.bgForms,
+          marginVertical: spacing[3],
+          borderWidth: 1,
+          borderColor: '#E7ECF3',
+          borderRadius: spacing[3],
+          overflow: 'hidden'
+        }}>
+          <TextInput
+            style={{ marginVertical: -spacing[2], backgroundColor: 'transparent' }}
+            underlineColor={'transparent'}
+            left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
+            placeholder={'Cari'}
+          />
+        </View>
+        {satwaLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
+        {satwa.map(data =>
+          <TouchableOpacity key={data.id} onPress={() => setSatwa_(JSON.parse(JSON.stringify(data)))}>
+            <View
+              style={{
+                padding: spacing[2],
+                backgroundColor: color.palette.primary,
+                borderRadius: spacing[2],
+                marginTop: spacing[2],
+              }}>
+              <Subheading style={{ color: 'white' }}>{data.nama}</Subheading>
+            </View>
+          </TouchableOpacity>
+        )}
+      </Modalize>
+    </>
+  )
+})

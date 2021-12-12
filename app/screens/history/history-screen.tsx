@@ -31,7 +31,12 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
       await formActivitiesStore.getAllFormActivities(page);
       setLoading(false);
     };
-    
+
+    const itemPress = (id) => {
+      formActivitiesStore.resetFormActivity();
+      props.navigation.navigate("historyDetail", { id: id });
+    }
+
     return (
       <Screen style={ROOT} header={
         <Header
@@ -95,7 +100,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
                   </View>
                 </DataTable.Cell>
                 <DataTable.Cell>
-                  <TouchableOpacity onPress={() => props.navigation.navigate("historyDetail")}>
+                  <TouchableOpacity onPress={() => itemPress(data.id)}>
                     <Icofont name="eye" size={18} />
                   </TouchableOpacity>
                 </DataTable.Cell>

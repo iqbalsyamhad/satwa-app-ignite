@@ -34,7 +34,7 @@ export type NavigatorParamList = {
   home: undefined
   activity: undefined
   history: undefined
-  historyDetail: undefined
+  historyDetail: { id }
   profile: undefined
   satwa: undefined
   satwaJenis: undefined

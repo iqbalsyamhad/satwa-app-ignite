@@ -23,3 +23,10 @@ export type GetSatwaResult = { kind: "ok"; satwa: Satwa } | GeneralApiProblem
 
 export type GetFormActivityResults = { kind: "ok"; formactivities: FormActivities } | GeneralApiProblem
 export type GetFormActivityResult = { kind: "ok"; formactivity: FormActivity } | GeneralApiProblem
+
+export interface StandardApiRespone {
+  status: string
+  message: string
+}
+
+export type GetStandardApiRespone = { kind: "ok"; data: StandardApiRespone } | GeneralApiProblem

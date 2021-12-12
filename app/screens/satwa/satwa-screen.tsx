@@ -20,14 +20,18 @@ export const SatwaScreen: FC<StackScreenProps<NavigatorParamList, "satwa">> = ob
   ({ navigation }) => {
     const [loading, setLoading] = useState(false);
     const { satwaStore } = useStores();
+    const { satwa, getAllSatwa } = satwaStore;
+
     useEffect(() => {
       getSatwa();
     }, []);
+
     const getSatwa = async () => {
       setLoading(true);
-      await satwaStore.getAllSatwa();
+      await getAllSatwa();
       setLoading(false);
     }
+
     return (
       <Screen style={ROOT} header={
         <Header
@@ -71,7 +75,7 @@ export const SatwaScreen: FC<StackScreenProps<NavigatorParamList, "satwa">> = ob
               <DataTable.Title style={{ flex: 2 }}>Jenis</DataTable.Title>
               <DataTable.Title>Jumlah</DataTable.Title>
             </DataTable.Header>
-            {satwaStore.satwa?.map(data =>
+            {satwa.map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 3 }}>{data.nama}</DataTable.Cell>

@@ -1,4 +1,4 @@
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { applySnapshot, cast, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { SatwaApi } from "../../services/api/satwa/satwa-api"
 import { withEnvironment } from "../extensions/with-environment"
 import { SatwaModel, SatwaSnapshot } from "../satwa/satwa"
@@ -15,7 +15,8 @@ export const SatwaStoreModel = types
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({
     saveSatwa: (satwaSnapshot: SatwaSnapshot[]) => {
-      self.satwa.replace(satwaSnapshot);
+      applySnapshot(self.satwa, satwaSnapshot);
+      // self.satwa = cast(satwaSnapshot);
     },
   }))
   .actions((self) => ({

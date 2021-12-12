@@ -2,7 +2,7 @@ import { ApiResponse } from "apisauce";
 import { FormActivityItem } from "../../../models/form-activity-item/form-activity-item";
 import { Api } from "../api";
 import { getGeneralApiProblem } from "../api-problem";
-import { GetFormActivityResults, GetFormActivityResult } from "../api.types";
+import { GetFormActivityResults, GetFormActivityResult, GetStandardApiRespone } from "../api.types";
 
 export class FormActivityApi {
     private api: Api;
@@ -31,7 +31,7 @@ export class FormActivityApi {
         }
     }
 
-    async getOneFormActivity(formId = null, date = null, satwaId = null): Promise<GetFormActivityResult> {
+    async getOneFormActivity(formId, date, satwaId): Promise<GetFormActivityResult> {
         try {
             // catch id for selected query
             if (!formId) {
@@ -97,7 +97,7 @@ export class FormActivityApi {
         }
     }
 
-    async updateActivityItem(collection): Promise<any> {
+    async updateActivityItem(collection): Promise<GetStandardApiRespone> {
         try {
             const { id, ...other } = collection;
 
@@ -116,9 +116,9 @@ export class FormActivityApi {
                 if (problem) return problem;
             }
 
-            const result = response.data
+            const data = response.data
 
-            return { kind: "ok", result };
+            return { kind: "ok", data };
         } catch (error) {
             __DEV__ && console.tron.log(error.message);
             return { kind: "bad-data" };
