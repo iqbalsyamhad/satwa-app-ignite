@@ -50,20 +50,30 @@ export const FormActivityStoreModel = types
         __DEV__ && console.tron.log(result.kind)
       }
     },
+    createFormActivity: async (date, satwaId) => {
+      const formActivityApi = new FormActivityApi(self.environment.api)
+      const result = await formActivityApi.createFormActivity(date, satwaId)
+
+      if (result.kind === "ok") {
+        //
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    },
     updateActivityItem: async (collection) => {
       const formActivityApi = new FormActivityApi(self.environment.api)
       const result = await formActivityApi.updateActivityItem(collection)
 
       if (result.kind === "ok") {
         if (result.data.message == "success") {
-          // let activity = self.formactivity;
-          // let index = activity.list_aktivitas.findIndex(i => i.id == collection.id);
-          // console.log('idx: ' + index);
-          // if (index >= 0) {
-          //   activity.list_aktivitas[index] = collection;
-          //   self.saveFormActivity(activity);
-          //   console.log('state chabged');
-          // }
+          let activity = JSON.parse(JSON.stringify(self.formactivity));
+          let index = activity.list_aktivitas.findIndex(i => i.id_jenis_aktivitas == collection.id_jenis_aktivitas);
+          if (index >= 0) {
+            activity.list_aktivitas[index] = collection;
+            self.saveFormActivity(activity);
+          } else {
+            alert('Unknown error. Please reload!');
+          }
         } else {
           alert(result.data.status);
         }

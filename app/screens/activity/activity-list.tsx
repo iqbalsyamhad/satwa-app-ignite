@@ -14,10 +14,9 @@ export const ActivityItem = (props) => {
         setLoading(true);
         let collection = JSON.parse(JSON.stringify(data));
         collection.id_aktivitas = formActivitiesStore.formactivity.id;
-        collection.activityResult = isActive ? 0 : 1;
+        collection.activityResult = isActive ? '0' : '1';
         await formActivitiesStore.updateActivityItem(collection);
         setLoading(false);
-        props.refresh();
     }
 
     return (

@@ -11,6 +11,36 @@ export class FormActivityApi {
         this.api = api;
     }
 
+    async createFormActivity(date, satwaId): Promise<GetStandardApiRespone> {
+        try {
+            let bodyFormData = new FormData();
+            bodyFormData.append('tanggal', date);
+            bodyFormData.append('id_satwa', satwaId);
+            bodyFormData.append('id_koordinator', '1');
+            bodyFormData.append('id_kadiv', '1');
+
+            const response: ApiResponse<any> = await this.api.apisauce.post(
+                "/api/aktivitas/store",
+                bodyFormData
+            );
+
+            console.log(JSON.stringify(response))
+
+            if (!response.ok) {
+                alert(response.data.status);
+                const problem = getGeneralApiProblem(response);
+                if (problem) return problem;
+            }
+
+            const data = response.data
+
+            return { kind: "ok", data };
+        } catch (error) {
+            __DEV__ && console.tron.log(error.message);
+            return { kind: "bad-data" };
+        }
+    }
+
     async getAllFormActivity(page): Promise<GetFormActivityResults> {
         try {
             const response: ApiResponse<any> = await this.api.apisauce.get(
@@ -33,6 +63,8 @@ export class FormActivityApi {
 
     async getOneFormActivity(formId, date, satwaId): Promise<GetFormActivityResult> {
         try {
+            let formactivity = null;
+
             // catch id for selected query
             if (!formId) {
                 const response: ApiResponse<any> = await this.api.apisauce.get(
@@ -46,24 +78,38 @@ export class FormActivityApi {
 
                 const { data } = response.data;
                 if (!data.length) {
-                    alert('No Data!');
-                    return { kind: "bad-data" };
+                    // create shadow object for new data
+                    if (date && satwaId) {
+                        // formactivity = {
+                        //     id: 0,
+                        //     tanggal: date,
+                        //     id_satwa: satwaId,
+                        //     satwa: {},
+                        //     id_pelaksana: 0,
+                        //     list_aktivitas: [],
+                        //     status: '-',
+                        // }
+                    } else {
+                        alert('No Data!');
+                    }
+                } else {
+                    formId = data[0].id;
                 }
-
-                formId = data[0].id;
             }
 
             // get detail data
-            const responsedetail: ApiResponse<any> = await this.api.apisauce.get(
-                `/api/aktivitas/detail/${formId}`,
-            );
+            if (formId) {
+                const responsedetail: ApiResponse<any> = await this.api.apisauce.get(
+                    `/api/aktivitas/detail/${formId}`,
+                );
 
-            if (!responsedetail.ok) {
-                const problem = getGeneralApiProblem(responsedetail);
-                if (problem) return problem;
+                if (!responsedetail.ok) {
+                    const problem = getGeneralApiProblem(responsedetail);
+                    if (problem) return problem;
+                }
+
+                formactivity = responsedetail.data.data;
             }
-
-            let formactivity = responsedetail.data.data;
 
             // get all activity
             const responseactivity: ApiResponse<any> = await this.api.apisauce.get(
@@ -74,7 +120,6 @@ export class FormActivityApi {
                 const problem = getGeneralApiProblem(responseactivity);
                 if (problem) return problem;
             }
-
             let activities = responseactivity.data.data;
             if (activities.length) {
                 for (const activity of activities) {
@@ -99,7 +144,7 @@ export class FormActivityApi {
 
     async updateActivityItem(collection): Promise<GetStandardApiRespone> {
         try {
-            const { id, ...other } = collection;
+            const { id, jenis_aktivitas, ...other } = collection;
 
             let bodyFormData = new FormData();
             for (const el of Object.keys(other)) {

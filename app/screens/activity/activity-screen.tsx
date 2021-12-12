@@ -26,15 +26,13 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
   const { satwaStore, formActivitiesStore } = useStores();
   const { satwa, getAllSatwa } = satwaStore;
   const [loading, setLoading] = useState(false);
+  const [fetched, setFetched] = useState(false);
   const [satwaLoading, setSatwaLoading] = useState(false);
+  const [newactLoading, setNewactLoading] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
   const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
   const [satwa_, setSatwa_] = useState(null);
   const modalizeRef = useRef<Modalize>(null);
-
-  useEffect(() => {
-    fetchActivities();
-  }, []);
 
   useEffect(() => {
     setShowCalendar(false);
@@ -46,19 +44,30 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
 
   useEffect(() => {
     formActivitiesStore.resetFormActivity();
+    setFetched(false);
   }, [date, satwa_]);
 
   const openModal = async () => {
     modalizeRef.current?.open();
-    setSatwaLoading(true);
-    await getAllSatwa();
-    setSatwaLoading(false);
+    if (!satwa.length) {
+      setSatwaLoading(true);
+      await getAllSatwa();
+      setSatwaLoading(false);
+    }
   }
 
   const fetchActivities = async () => {
     setLoading(true);
     await formActivitiesStore.getFormActivity(null, date, satwa_?.id || null);
     setLoading(false);
+    setFetched(true);
+  }
+
+  const createActivity = async () => {
+    setNewactLoading(true);
+    await formActivitiesStore.createFormActivity(date, satwa_?.id || null);
+    setNewactLoading(false);
+    fetchActivities();
   }
 
   return (
@@ -113,7 +122,21 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             <Icofont name="chevron-down" color={color.primary} size={24} />
           </View>
         </TouchableOpacity>
-        {!formActivitiesStore.formactivity.list_aktivitas.length &&
+        {!formActivitiesStore.formactivity.list_aktivitas.length && fetched ?
+          <View style={{ alignItems: 'center', marginTop: spacing[4] }}>
+            <Text style={{ color: 'grey' }}>No Data!</Text>
+            {date && satwa_ &&
+              <Button
+                preset="small"
+                style={{ marginTop: spacing[3] }}
+                loading={newactLoading}
+                onPress={() => createActivity()}>
+                <Paragraph style={{ color: color.palette.white }}><Icofont name="plus" size={16} /> Tambah Aktivitas</Paragraph>
+              </Button>
+            }
+          </View>
+          :
+          !formActivitiesStore.formactivity.list_aktivitas.length &&
           <Button
             preset="small"
             style={{ marginTop: spacing[3] }}
@@ -125,7 +148,7 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
           <ActivityIndicator style={{ margin: spacing[4] }} />
           :
           formActivitiesStore.formactivity.list_aktivitas?.map(activity =>
-            <ActivityItem key={activity.id} data={activity} refresh={() => fetchActivities()} />
+            <ActivityItem key={Math.random()} data={activity} />
           )
         }
       </Screen>
