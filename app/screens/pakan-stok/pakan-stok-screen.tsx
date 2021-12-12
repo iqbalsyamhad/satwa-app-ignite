@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { RefreshControl, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Header, Screen, Text } from "../../components"
@@ -9,6 +9,7 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -18,6 +19,19 @@ const ROOT: ViewStyle = {
 export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok">> = observer(
   (props) => {
     const [loading, setLoading] = useState(false);
+    const { pakanStore } = useStores();
+    const { pakans, getAllPakan } = pakanStore;
+
+    useEffect(() => {
+      getPakan();
+    }, []);
+
+    const getPakan = async () => {
+      setLoading(true);
+      await getAllPakan();
+      setLoading(false);
+    }
+
     return (
       <Screen style={ROOT} header={
         <Header
@@ -48,7 +62,7 @@ export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => { }}
+              onRefresh={() => getPakan()}
             />
           }>
           <DataTable>
@@ -56,21 +70,23 @@ export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok
               marginTop: spacing[3],
               borderBottomColor: color.primary
             }}>
-              <DataTable.Title>No.</DataTable.Title>
+              <DataTable.Title>ID</DataTable.Title>
               <DataTable.Title style={{ flex: 3 }}>Nama Pakan</DataTable.Title>
               <DataTable.Title>Ktg</DataTable.Title>
               <DataTable.Title style={{ flex: 1.5 }}>Stok T</DataTable.Title>
               <DataTable.Title style={{ flex: 1.5 }}>Stok D</DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Pertanggal</DataTable.Title>
             </DataTable.Header>
-            <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
-              <DataTable.Cell>1</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 3 }}>Beras Merah</DataTable.Cell>
-              <DataTable.Cell>Biji</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1.5 }}>10 kg</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1.5 }}>10 kg</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 2 }}>10/11/21</DataTable.Cell>
-            </DataTable.Row>
+            {pakans.map(data =>
+              <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
+                <DataTable.Cell>{data.id}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 3 }}>{data.nama}</DataTable.Cell>
+                <DataTable.Cell>{data.kategori.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>-</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>-</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>-</DataTable.Cell>
+              </DataTable.Row>
+            )}
           </DataTable>
         </ScrollView>
       </Screen>

@@ -65,7 +65,9 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => setPage(1)}
+              onRefresh={() =>
+                page == 1 ? getFormActivities(page) : setPage(1)
+              }
             />
           }>
           <DataTable>

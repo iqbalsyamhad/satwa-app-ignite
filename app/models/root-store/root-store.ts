@@ -3,6 +3,7 @@ import { AuthenticationStoreModel } from "../authentication-store/authentication
 import { SatwaStoreModel } from "../satwa-store/satwa-store"
 import { SatwaJenisStoreModel } from "../satwa-jenis-store/satwa-jenis-store"
 import { FormActivityStoreModel } from "../form-activity-store/form-activity-store"
+import { PakanStoreModel } from "../pakan-store/pakan-store"
 
 /**
  * A RootStore model.
@@ -13,6 +14,7 @@ export const RootStoreModel = types.model("RootStore").props({
   satwaStore: types.optional(SatwaStoreModel, {} as any),
   satwaJenisStore: types.optional(SatwaJenisStoreModel, {} as any),
   formActivitiesStore: types.optional(FormActivityStoreModel, {} as any),
+  pakanStore: types.optional(PakanStoreModel, {} as any),
 })
 
 /**

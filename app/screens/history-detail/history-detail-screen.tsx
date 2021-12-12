@@ -45,7 +45,7 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
             color={color.palette.black}
             status={props.activityResult == '1' ? 'checked' : 'unchecked'}
           />
-          <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>Piket Bengkok</Subheading>
+          <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>{props.jenis_aktivitas.name}</Subheading>
         </View>
       )
     }

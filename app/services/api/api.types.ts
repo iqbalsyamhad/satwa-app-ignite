@@ -4,6 +4,7 @@ import { SatwaJenis } from "../../models/satwa-jenis/satwa-jenis"
 import { Satwa } from "../../models/satwa/satwa"
 import { FormActivities } from "../../models/form-activities/form-activities"
 import { FormActivity } from "../../models/form-activity/form-activity"
+import { Pakan } from "../../models/pakan/pakan"
 
 export type LoginResult = { kind: "ok"; user: Authentication } | GeneralApiProblem
 export type LogoutResult = { kind: "ok"; } | GeneralApiProblem
@@ -30,3 +31,6 @@ export interface StandardApiRespone {
 }
 
 export type GetStandardApiRespone = { kind: "ok"; data: StandardApiRespone } | GeneralApiProblem
+
+export type GetPakanResults = { kind: "ok"; pakan: Pakan[] } | GeneralApiProblem
+export type GetPakanResult = { kind: "ok"; pakan: Pakan } | GeneralApiProblem
