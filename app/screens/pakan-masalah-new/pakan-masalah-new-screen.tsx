@@ -1,7 +1,7 @@
-import React, { FC, useRef, useState } from "react"
+import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Image, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
-import { Header, Screen, Text, TextField } from "../../components"
+import { Button, Header, Screen, Text, TextField } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -10,9 +10,10 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { ActivityIndicator, Menu, Paragraph, RadioButton, Subheading, TextInput, Title } from "react-native-paper"
 import { Modalize } from 'react-native-modalize';
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import * as ImagePicker from '../../utils/imagepicker';
 import RBSheet from "react-native-raw-bottom-sheet"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -20,46 +21,76 @@ const ROOT: ViewStyle = {
   paddingHorizontal: spacing[5]
 }
 
-const SelectItem = (props) => {
-  return (
-    <TouchableOpacity onPress={() => props.open()}>
-      <View style={{
-        height: 50,
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: color.palette.bgForms,
-        borderRadius: spacing[3],
-        paddingHorizontal: spacing[4],
-        borderWidth: 1,
-        borderColor: "#E7ECF3",
-      }}>
-        <Subheading style={{ flex: 1 }}>Pilih Satwa</Subheading>
-        <Icofont name="chevron-down" color={color.primary} size={28} />
-      </View>
-    </TouchableOpacity>
-  )
-}
-
 export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pakanMasalahNew">> = observer(
   (props) => {
     const [pakanLoading, setPakanLoading] = useState(false);
-    const [keterangan, setKeterangan] = useState('retur');
-    const [alasan, setAlasan] = useState('tdklayak');
+    const [supplierLoading, setSupplierLoading] = useState(false);
+    const [saveLoading, setSaveLoading] = useState(false);
+    const [pakan_, setPakan_] = useState(null);
+    const [supplier_, setSupplier_] = useState(null);
+    const [keterangan, setKeterangan] = useState('Retur');
+    const [alasan, setAlasan] = useState('Tidak Layak');
     const [imgresponse, setImgResponse] = useState(null);
+    const { pakanStore, supplierStore } = useStores();
+    const { pakans, getAllPakan, createPakanPermasalahan } = pakanStore;
+    const { suppliers, getAllSupplier } = supplierStore;
     const modalizeRef = useRef<Modalize>(null);
+    const modalizeSuppRef = useRef<Modalize>(null);
     const rbSheet = useRef<RBSheet>(null);
+
+    useEffect(() => {
+      modalizeRef.current?.close();
+    }, [pakan_]);
+
+    useEffect(() => {
+      modalizeSuppRef.current?.close();
+    }, [supplier_]);
 
     type FormValues = {
       jumlah: bigint;
-      supplier: string;
     };
     const { ...methods } = useForm();
+    const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
+      return console.log(errors)
+    }
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
+      try {
+        if (!pakan_) throw new Error('Pilih jenis pakan!');
+        if (!imgresponse) throw new Error('Upload gambar permasalahan pakan!');
+
+        let collection = {
+          id_pakan: pakan_.id,
+          jumlah: data.jumlah,
+          id_supplier: supplier_.id,
+          keterangan: keterangan,
+          alasan: alasan,
+          bukti_foto: { name: imgresponse.fileName, ...imgresponse },
+        }
+
+        setSaveLoading(true);
+        await createPakanPermasalahan(collection)
+        setSaveLoading(false);
+      } catch (error) {
+        alert(error.message);
+      }
+    }
 
     const openModal = async () => {
       modalizeRef.current?.open();
-      setPakanLoading(true);
-      // await satwaStore.getAllSatwa();
-      setPakanLoading(false);
+      if (!pakans.length) {
+        setPakanLoading(true);
+        await getAllPakan();
+        setPakanLoading(false);
+      }
+    }
+
+    const openSuppModal = async () => {
+      modalizeSuppRef.current?.open();
+      if (!suppliers.length) {
+        setSupplierLoading(true);
+        await getAllSupplier();
+        setSupplierLoading(false);
+      }
     }
 
     const imagePick = async (type) => {
@@ -86,7 +117,21 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
             headerText="Tambah Permasalahan Pakan"
           />
         }>
-          <SelectItem open={() => openModal()} />
+          <TouchableOpacity onPress={() => openModal()}>
+            <View style={{
+              height: 50,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: color.palette.bgForms,
+              borderRadius: spacing[3],
+              paddingHorizontal: spacing[4],
+              borderWidth: 1,
+              borderColor: "#E7ECF3",
+            }}>
+              <Subheading style={{ flex: 1 }}>{pakan_?.nama || 'Pilih Pakan'}</Subheading>
+              <Icofont name="chevron-down" color={color.primary} size={28} />
+            </View>
+          </TouchableOpacity>
           <FormProvider {...methods}>
             <TextField
               containerStyle={{ marginTop: spacing[3] }}
@@ -95,25 +140,35 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
               placeholder={'Jumlah'}
               rules={{ required: 'Jumlah harus diisi!' }}
             />
-            <TextField
-              containerStyle={{ marginTop: spacing[3] }}
-              name="supplier"
-              placeholder={'Supplier'}
-              rules={{ required: 'Supplier harus diisi!' }}
-            />
           </FormProvider>
+          <TouchableOpacity onPress={() => openSuppModal()}>
+            <View style={{
+              marginTop: spacing[3],
+              height: 50,
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: color.palette.bgForms,
+              borderRadius: spacing[3],
+              paddingHorizontal: spacing[4],
+              borderWidth: 1,
+              borderColor: "#E7ECF3",
+            }}>
+              <Subheading style={{ flex: 1 }}>{supplier_?.nama || 'Pilih Supplier'}</Subheading>
+              <Icofont name="chevron-down" color={color.primary} size={28} />
+            </View>
+          </TouchableOpacity>
           <Paragraph style={{ marginTop: spacing[5] }}>Keterangan</Paragraph>
           <View>
             <RadioButton.Group onValueChange={value => setKeterangan(value)} value={keterangan}>
-              <RadioButton.Item label="Retur" value="retur" />
-              <RadioButton.Item label="Permintaan" value="permintaan" />
+              <RadioButton.Item label="Retur" value="Retur" />
+              <RadioButton.Item label="Permintaan" value="Permintaan" />
             </RadioButton.Group>
           </View>
           <Paragraph style={{ marginTop: spacing[5] }}>Alasan</Paragraph>
           <View>
             <RadioButton.Group onValueChange={value => setAlasan(value)} value={alasan}>
-              <RadioButton.Item label="Tidak Layak" value="tdklayak" />
-              <RadioButton.Item label="Kurang" value="kurang" />
+              <RadioButton.Item label="Tidak Layak" value="Tidak Layak" />
+              <RadioButton.Item label="Kurang" value="Kurang" />
             </RadioButton.Group>
           </View>
           <Paragraph style={{ marginTop: spacing[5] }}>Bukti Photo</Paragraph>
@@ -155,6 +210,13 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
               }
             </View>
           </TouchableOpacity>
+          <Button
+            preset="small"
+            style={{ marginTop: spacing[3] }}
+            loading={saveLoading}
+            onPress={methods.handleSubmit(onSubmit, onError)}>
+            <Paragraph style={{ color: color.palette.white }}><Icofont name="check" size={16} /> Simpan</Paragraph>
+          </Button>
           <View style={{ height: spacing[5] }} />
         </Screen>
         <Modalize
@@ -188,6 +250,64 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
             />
           </View>
           {pakanLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
+          {pakans.map(data =>
+            <TouchableOpacity key={data.id} onPress={() => setPakan_(JSON.parse(JSON.stringify(data)))}>
+              <View
+                style={{
+                  padding: spacing[2],
+                  backgroundColor: color.palette.primary,
+                  borderRadius: spacing[2],
+                  marginTop: spacing[2],
+                }}>
+                <Subheading style={{ color: 'white' }}>{data.nama}</Subheading>
+              </View>
+            </TouchableOpacity>
+          )}
+        </Modalize>
+        <Modalize
+          ref={modalizeSuppRef}
+          modalTopOffset={50}
+          snapPoint={420}
+          modalStyle={{
+            padding: spacing[3]
+          }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View style={{ flex: 1 }}>
+              <Title>Data Supplier</Title>
+            </View>
+            <TouchableOpacity onPress={() => modalizeSuppRef.current?.close()}>
+              <Icofont name="close" size={20} />
+            </TouchableOpacity>
+          </View>
+          <View style={{
+            backgroundColor: color.palette.bgForms,
+            marginVertical: spacing[3],
+            borderWidth: 1,
+            borderColor: '#E7ECF3',
+            borderRadius: spacing[3],
+            overflow: 'hidden'
+          }}>
+            <TextInput
+              style={{ marginVertical: -spacing[2], backgroundColor: 'transparent' }}
+              underlineColor={'transparent'}
+              left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
+              placeholder={'Cari'}
+            />
+          </View>
+          {supplierLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
+          {suppliers.map(data =>
+            <TouchableOpacity key={data.id} onPress={() => setSupplier_(JSON.parse(JSON.stringify(data)))}>
+              <View
+                style={{
+                  padding: spacing[2],
+                  backgroundColor: color.palette.primary,
+                  borderRadius: spacing[2],
+                  marginTop: spacing[2],
+                }}>
+                <Subheading style={{ color: 'white' }}>{data.nama}</Subheading>
+              </View>
+            </TouchableOpacity>
+          )}
         </Modalize>
         <RBSheet
           ref={rbSheet}

@@ -77,9 +77,9 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
           <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
           <Subheading>{`Status: ${formActivitiesStore.formactivity.status}`}</Subheading>
           <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[3] }} />
-          <Subheading>Pelaksana: </Subheading>
-          <Subheading>Koordinator: </Subheading>
-          <Subheading>Kadiv: </Subheading>
+          <Subheading>{`Pelaksana: ${formActivitiesStore.formactivity.pelaksana.name}`}</Subheading>
+          <Subheading>{`Koordinator: ${formActivitiesStore.formactivity.koordinator.name}`}</Subheading>
+          <Subheading>{`Kadiv: ${formActivitiesStore.formactivity.kadiv.name}`}</Subheading>
         </ScrollView>
       </Screen>
     )

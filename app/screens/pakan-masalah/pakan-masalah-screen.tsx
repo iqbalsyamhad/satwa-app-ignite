@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { RefreshControl, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text } from "../../components"
@@ -9,6 +9,7 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -18,6 +19,19 @@ const ROOT: ViewStyle = {
 export const PakanMasalahScreen: FC<StackScreenProps<NavigatorParamList, "pakanMasalah">> = observer(
   (props) => {
     const [loading, setLoading] = useState(false);
+    const { pakanStore } = useStores();
+    const { pakansMasalah, getAllPakanPermasalahan } = pakanStore;
+
+    useEffect(() => {
+      getPakanMasalah();
+    }, []);
+
+    const getPakanMasalah = async () => {
+      setLoading(true);
+      await getAllPakanPermasalahan();
+      setLoading(false);
+    }
+
     return (
       <Screen style={ROOT} header={
         <Header
@@ -58,7 +72,7 @@ export const PakanMasalahScreen: FC<StackScreenProps<NavigatorParamList, "pakanM
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => { }}
+              onRefresh={() => getPakanMasalah()}
             />
           }>
           <DataTable>
@@ -66,19 +80,21 @@ export const PakanMasalahScreen: FC<StackScreenProps<NavigatorParamList, "pakanM
               marginTop: spacing[3],
               borderBottomColor: color.primary
             }}>
-              <DataTable.Title>No.</DataTable.Title>
+              <DataTable.Title>ID</DataTable.Title>
               <DataTable.Title style={{ flex: 2.5 }}>Nama Pakan</DataTable.Title>
               <DataTable.Title>Jumlah</DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Keterangan</DataTable.Title>
               <DataTable.Title style={{ flex: 2.5 }}>Alasan</DataTable.Title>
             </DataTable.Header>
-            <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
-              <DataTable.Cell>1</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 2.5 }}>Beras Merah</DataTable.Cell>
-              <DataTable.Cell>2</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 2 }}>Retur</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 2.5 }}>Tidak Layak</DataTable.Cell>
-            </DataTable.Row>
+            {pakansMasalah.map(data =>
+              <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
+                <DataTable.Cell>{data.id}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2.5 }}>{data.pakan.nama}</DataTable.Cell>
+                <DataTable.Cell>{data.jumlah}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>{data.keterangan}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2.5 }}>{data.alasan}</DataTable.Cell>
+              </DataTable.Row>
+            )}
           </DataTable>
         </ScrollView>
       </Screen>

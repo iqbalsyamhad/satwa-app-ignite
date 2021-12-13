@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { Dimensions, TouchableOpacity, View, ViewStyle } from "react-native"
+import { useIsFocused } from "@react-navigation/native"
 import { Button, Header, Screen, Text, TextField } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -30,8 +31,9 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
   const [satwaLoading, setSatwaLoading] = useState(false);
   const [newactLoading, setNewactLoading] = useState(false);
   const [showCalendar, setShowCalendar] = useState(false);
-  const [date, setDate] = useState(moment(new Date()).format('YYYY-MM-DD'));
-  const [satwa_, setSatwa_] = useState(null);
+  const [date, setDate] = useState(formActivitiesStore.formactivity?.tanggal || moment(new Date()).format('YYYY-MM-DD'));
+  const [satwa_, setSatwa_] = useState(formActivitiesStore.formactivity?.satwa || null);
+  const isFocused = useIsFocused();
   const modalizeRef = useRef<Modalize>(null);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
   useEffect(() => {
     formActivitiesStore.resetFormActivity();
     setFetched(false);
-  }, [date, satwa_]);
+  }, [date, satwa_, isFocused]);
 
   const openModal = async () => {
     modalizeRef.current?.open();
@@ -82,10 +84,7 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             <Subheading style={{ marginVertical: 0 }}>Periode:</Subheading>
             <Subheading style={{ marginVertical: 0 }}>{moment(new Date()).format('MMMM YYYY')}</Subheading>
           </View>
-          <Button
-            preset="small">
-            <Paragraph style={{ color: color.palette.white }}><Icofont name="plus-circle-outline" size={16} /> Simpan</Paragraph>
-          </Button>
+          <Subheading>{`Status: ${formActivitiesStore.formactivity?.status || '-'}`}</Subheading>
         </View>
         <Divider style={{ borderColor: color.primary, borderWidth: 0.5, marginVertical: spacing[4] }} />
         <Subheading style={{ marginVertical: 0 }}>Tanggal:</Subheading>

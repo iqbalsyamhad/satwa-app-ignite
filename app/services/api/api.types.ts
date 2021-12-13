@@ -5,6 +5,8 @@ import { Satwa } from "../../models/satwa/satwa"
 import { FormActivities } from "../../models/form-activities/form-activities"
 import { FormActivity } from "../../models/form-activity/form-activity"
 import { Pakan } from "../../models/pakan/pakan"
+import { PakanPermasalahan } from "../../models/pakan-permasalahan/pakan-permasalahan"
+import { Supplier } from "../../models/supplier/supplier"
 
 export type LoginResult = { kind: "ok"; user: Authentication } | GeneralApiProblem
 export type LogoutResult = { kind: "ok"; } | GeneralApiProblem
@@ -34,3 +36,9 @@ export type GetStandardApiRespone = { kind: "ok"; data: StandardApiRespone } | G
 
 export type GetPakanResults = { kind: "ok"; pakan: Pakan[] } | GeneralApiProblem
 export type GetPakanResult = { kind: "ok"; pakan: Pakan } | GeneralApiProblem
+
+export type GetPakanPermasalahanResults = { kind: "ok"; pakan: PakanPermasalahan[] } | GeneralApiProblem
+export type GetPakanPermasalahanResult = { kind: "ok"; pakan: PakanPermasalahan } | GeneralApiProblem
+
+export type GetSupplierResults = { kind: "ok"; supplier: Supplier[] } | GeneralApiProblem
+export type GetSupplierResult = { kind: "ok"; supplier: Supplier } | GeneralApiProblem
