@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { RefreshControl, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text } from "../../components"
@@ -9,6 +9,7 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -18,6 +19,19 @@ const ROOT: ViewStyle = {
 export const SatwaUpdateScreen: FC<StackScreenProps<NavigatorParamList, "satwaUpdate">> = observer(
   (props) => {
     const [loading, setLoading] = useState(false);
+    const { satwaStore } = useStores();
+    const { satwaupdates, getAllUpdateSatwa } = satwaStore;
+
+    useEffect(() => {
+      getSatwaUpdate();
+    }, []);
+
+    const getSatwaUpdate = async () => {
+      setLoading(true);
+      await getAllUpdateSatwa();
+      setLoading(false);
+    }
+
     return (
       <Screen style={ROOT} header={
         <Header
@@ -58,7 +72,7 @@ export const SatwaUpdateScreen: FC<StackScreenProps<NavigatorParamList, "satwaUp
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => { }}
+              onRefresh={() => getSatwaUpdate()}
             />
           }>
           <DataTable>
@@ -66,17 +80,19 @@ export const SatwaUpdateScreen: FC<StackScreenProps<NavigatorParamList, "satwaUp
               marginTop: spacing[3],
               borderBottomColor: color.primary
             }}>
-              <DataTable.Title>No.</DataTable.Title>
+              <DataTable.Title>ID</DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Nama</DataTable.Title>
               <DataTable.Title style={{ flex: 3 }}>Keterangan</DataTable.Title>
               <DataTable.Title>Jumlah</DataTable.Title>
             </DataTable.Header>
-            <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
-              <DataTable.Cell>1</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 2 }}>Monyet</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 3 }}>Berkembang Biak</DataTable.Cell>
-              <DataTable.Cell>5</DataTable.Cell>
-            </DataTable.Row>
+            {satwaupdates.map(data =>
+              <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
+                <DataTable.Cell>{data.id}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>{data.satwa.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 3 }}>{data.keterangan}</DataTable.Cell>
+                <DataTable.Cell>{data.jumlah}</DataTable.Cell>
+              </DataTable.Row>
+            )}
           </DataTable>
         </ScrollView>
       </Screen>

@@ -1,4 +1,5 @@
 import { applySnapshot, cast, Instance, SnapshotOut, types } from "mobx-state-tree"
+import { SatwaUpdateModel, SatwaUpdateSnapshot } from "../satwa-update/satwa-update"
 import { SatwaApi } from "../../services/api/satwa/satwa-api"
 import { withEnvironment } from "../extensions/with-environment"
 import { SatwaModel, SatwaSnapshot } from "../satwa/satwa"
@@ -10,6 +11,7 @@ export const SatwaStoreModel = types
   .model("SatwaStore")
   .props({
     satwa: types.optional(types.array(SatwaModel), []),
+    satwaupdates: types.optional(types.array(SatwaUpdateModel), []),
   })
   .extend(withEnvironment)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -17,6 +19,9 @@ export const SatwaStoreModel = types
     saveSatwa: (satwaSnapshot: SatwaSnapshot[]) => {
       applySnapshot(self.satwa, satwaSnapshot);
       // self.satwa = cast(satwaSnapshot);
+    },
+    saveSatwaUpdates: (satwaUpdateSnapshot: SatwaUpdateSnapshot[]) => {
+      applySnapshot(self.satwaupdates, satwaUpdateSnapshot);
     },
   }))
   .actions((self) => ({
@@ -26,6 +31,26 @@ export const SatwaStoreModel = types
 
       if (result.kind === "ok") {
         self.saveSatwa(result.satwa)
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    },
+    getAllUpdateSatwa: async () => {
+      const satwaApi = new SatwaApi(self.environment.api)
+      const result = await satwaApi.getAllUpdateSatwa()
+
+      if (result.kind === "ok") {
+        self.saveSatwaUpdates(result.satwaupdate)
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+      }
+    },
+    createUpdateSatwa: async (collection) => {
+      const satwaApi = new SatwaApi(self.environment.api)
+      const result = await satwaApi.createUpdateSatwa(collection)
+
+      if (result.kind === "ok") {
+        //
       } else {
         __DEV__ && console.tron.log(result.kind)
       }

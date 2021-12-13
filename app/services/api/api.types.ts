@@ -7,6 +7,7 @@ import { FormActivity } from "../../models/form-activity/form-activity"
 import { Pakan } from "../../models/pakan/pakan"
 import { PakanPermasalahan } from "../../models/pakan-permasalahan/pakan-permasalahan"
 import { Supplier } from "../../models/supplier/supplier"
+import { SatwaUpdate } from "../../models/satwa-update/satwa-update"
 
 export type LoginResult = { kind: "ok"; user: Authentication } | GeneralApiProblem
 export type LogoutResult = { kind: "ok"; } | GeneralApiProblem
@@ -23,6 +24,9 @@ export type GetSatwaJenisResults = { kind: "ok"; satwa_jenis: SatwaJenis[] } | G
 
 export type GetSatwaResults = { kind: "ok"; satwa: Satwa[] } | GeneralApiProblem
 export type GetSatwaResult = { kind: "ok"; satwa: Satwa } | GeneralApiProblem
+
+export type GetSatwaUpdateResults = { kind: "ok"; satwaupdate: SatwaUpdate[] } | GeneralApiProblem
+export type GetSatwaUpdateResult = { kind: "ok"; satwaupdate: SatwaUpdate } | GeneralApiProblem
 
 export type GetFormActivityResults = { kind: "ok"; formactivities: FormActivities } | GeneralApiProblem
 export type GetFormActivityResult = { kind: "ok"; formactivity: FormActivity } | GeneralApiProblem

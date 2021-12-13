@@ -1,5 +1,5 @@
 import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { UserModel } from ".."
+import { UserModel } from "../user/user"
 import { FormActivityItemModel } from "../form-activity-item/form-activity-item"
 import { SatwaModel } from "../satwa/satwa"
 
