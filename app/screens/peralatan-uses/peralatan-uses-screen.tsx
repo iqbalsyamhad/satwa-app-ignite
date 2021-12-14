@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { RefreshControl, ScrollView, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text } from "../../components"
@@ -9,6 +9,7 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -17,7 +18,18 @@ const ROOT: ViewStyle = {
 
 export const PeralatanUsesScreen: FC<StackScreenProps<NavigatorParamList, "peralatanUses">> = observer(
   (props) => {
-    const [loading, setLoading] = useState(false);
+    const { peralatanStore } = useStores();
+    const { peralatanuses, loading, getAllPeralatanPenggunaan, setLoading, errmsg } = peralatanStore;
+
+    useEffect(() => {
+      getPeralatanPenggunaan();
+    }, []);
+
+    const getPeralatanPenggunaan = async () => {
+      setLoading(true);
+      await getAllPeralatanPenggunaan();
+      setLoading(false);
+    }
 
     return (
       <Screen style={ROOT} header={
@@ -59,24 +71,26 @@ export const PeralatanUsesScreen: FC<StackScreenProps<NavigatorParamList, "peral
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => { }}
+              onRefresh={() => getPeralatanPenggunaan()}
             />
           }>
           <DataTable>
             <DataTable.Header style={{
               borderBottomColor: color.primary
             }}>
-              <DataTable.Title>No.</DataTable.Title>
+              <DataTable.Title>ID</DataTable.Title>
               <DataTable.Title style={{ flex: 1.5 }}>Peralatan</DataTable.Title>
               <DataTable.Title style={{ flex: 1 }}>Jml</DataTable.Title>
               <DataTable.Title style={{ flex: 1 }}>Pertanggal</DataTable.Title>
             </DataTable.Header>
-            <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
-              <DataTable.Cell>1</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1.5 }}>Vaksin</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1 }}>1</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1 }}>11/10/21</DataTable.Cell>
-            </DataTable.Row>
+            {peralatanuses.map(data =>
+              <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
+                <DataTable.Cell>{data.id}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>{data.peralatan.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1 }}>{data.jumlah}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1 }}>-</DataTable.Cell>
+              </DataTable.Row>
+            )}
           </DataTable>
         </ScrollView>
       </Screen>

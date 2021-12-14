@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { RefreshControl, ScrollView, View, ViewStyle } from "react-native"
 import { Header, Screen, Text } from "../../components"
@@ -9,6 +9,7 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, TextInput } from "react-native-paper"
+import { useStores } from "../../models"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -17,7 +18,18 @@ const ROOT: ViewStyle = {
 
 export const PeralatanStokScreen: FC<StackScreenProps<NavigatorParamList, "peralatanStok">> = observer(
   (props) => {
-    const [loading, setLoading] = useState(false);
+    const { peralatanStore } = useStores();
+    const { peralatans, loading, getAllPeralatan, setLoading } = peralatanStore;
+
+    useEffect(() => {
+      getPeralatan();
+    }, []);
+
+    const getPeralatan = async () => {
+      setLoading(true);
+      await getAllPeralatan();
+      setLoading(false);
+    }
 
     return (
       <Screen style={ROOT} header={
@@ -51,7 +63,7 @@ export const PeralatanStokScreen: FC<StackScreenProps<NavigatorParamList, "peral
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => { }}
+              onRefresh={() => getPeralatan()}
             />
           }>
           <DataTable>
@@ -59,21 +71,23 @@ export const PeralatanStokScreen: FC<StackScreenProps<NavigatorParamList, "peral
               marginTop: spacing[3],
               borderBottomColor: color.primary
             }}>
-              <DataTable.Title>No.</DataTable.Title>
+              <DataTable.Title>ID</DataTable.Title>
               <DataTable.Title style={{ flex: 1.5 }}>Peralatan</DataTable.Title>
               <DataTable.Title style={{ flex: 1 }}>Ktg</DataTable.Title>
               <DataTable.Title style={{ flex: 1 }}>Stok</DataTable.Title>
               <DataTable.Title>Kondisi</DataTable.Title>
               <DataTable.Title style={{ flex: 1.5 }}>Aksi</DataTable.Title>
             </DataTable.Header>
-            <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
-              <DataTable.Cell>1</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1.5 }}>Vaksin</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1 }}>Habis Pakai</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1 }}>150</DataTable.Cell>
-              <DataTable.Cell>Banyak</DataTable.Cell>
-              <DataTable.Cell style={{ flex: 1.5 }}>+USE</DataTable.Cell>
-            </DataTable.Row>
+            {peralatans.map(data =>
+              <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
+                <DataTable.Cell>{data.id}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>{data.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1 }}>{data.kategori.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1 }}>{data.stok}</DataTable.Cell>
+                <DataTable.Cell>Banyak</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>+USE</DataTable.Cell>
+              </DataTable.Row>
+            )}
           </DataTable>
         </ScrollView>
       </Screen>

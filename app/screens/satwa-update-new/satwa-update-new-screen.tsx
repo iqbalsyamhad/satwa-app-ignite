@@ -152,19 +152,19 @@ export const SatwaUpdateNewScreen: FC<StackScreenProps<NavigatorParamList, "satw
           />
         }>
           <SelectItem open={() => openModal()} />
+          <Paragraph style={{ marginTop: spacing[4] }}>Keterangan:</Paragraph>
+          {ketSatwa.map(data =>
+            <OptionItem key={Math.random()} item={data} />
+          )}
           <FormProvider {...methods}>
             <TextField
-              containerStyle={{ marginTop: spacing[3] }}
+              containerStyle={{ marginTop: spacing[4] }}
               name="jumlah"
               keyboardType="numeric"
               placeholder={'Jumlah'}
               rules={{ required: 'Jumlah harus diisi!' }}
             />
           </FormProvider>
-          <Paragraph style={{ marginTop: spacing[5] }}>Keterangan:</Paragraph>
-          {ketSatwa.map(data =>
-            <OptionItem key={Math.random()} item={data} />
-          )}
           <Paragraph style={{ marginTop: spacing[5] }}>Bukti Foto:</Paragraph>
           <TouchableOpacity onPress={() => rbSheet.current?.open()}>
             <View style={{
