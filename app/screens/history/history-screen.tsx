@@ -21,19 +21,20 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const { formActivitiesStore } = useStores();
+    const { formactivities, getAllFormActivities, resetFormActivity, setCurrentPage } = formActivitiesStore;
 
     useEffect(() => {
-      getFormActivities(page);
-    }, [page]);
+      getFormActivities();
+    }, [formactivities.current_page]);
 
-    const getFormActivities = async (page) => {
+    const getFormActivities = async () => {
       setLoading(true);
-      await formActivitiesStore.getAllFormActivities(page);
+      await getAllFormActivities();
       setLoading(false);
     };
 
     const itemPress = (id) => {
-      formActivitiesStore.resetFormActivity();
+      resetFormActivity();
       props.navigation.navigate("historyDetail", { id: id });
     }
 
@@ -81,7 +82,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
               <DataTable.Title style={{ flex: 2 }}>Status</DataTable.Title>
               <DataTable.Title>x</DataTable.Title>
             </DataTable.Header>
-            {formActivitiesStore.formactivities?.data.map(data =>
+            {formactivities?.data.map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 2 }}>{data.tanggal}</DataTable.Cell>
@@ -110,10 +111,10 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
             )}
 
             <DataTable.Pagination
-              page={formActivitiesStore.formactivities?.page}
-              numberOfPages={formActivitiesStore.formactivities?.totalPage}
-              onPageChange={(page) => { }}
-              label={`Halaman ${formActivitiesStore.formactivities?.page} dari ${formActivitiesStore.formactivities?.totalPage}`}
+              page={formactivities.current_page - 1}
+              numberOfPages={formactivities.last_page}
+              onPageChange={(page) => setCurrentPage(page + 1)}
+              label={`Halaman ${formactivities.current_page} dari ${formactivities.last_page}`}
             />
           </DataTable>
         </ScrollView>

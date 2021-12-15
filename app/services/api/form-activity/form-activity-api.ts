@@ -44,7 +44,7 @@ export class FormActivityApi {
     async getAllFormActivity(page): Promise<GetFormActivityResults> {
         try {
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                "/api/aktivitas",
+                `/api/aktivitas?page=${page}`,
             );
 
             if (!response.ok) {
@@ -52,7 +52,7 @@ export class FormActivityApi {
                 if (problem) return problem;
             }
 
-            const formactivities = response.data
+            const formactivities = response.data.data
 
             return { kind: "ok", formactivities };
         } catch (error) {

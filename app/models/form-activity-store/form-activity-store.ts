@@ -30,9 +30,16 @@ export const FormActivityStoreModel = types
     },
   }))
   .actions((self) => ({
-    getAllFormActivities: async (page) => {
+    setCurrentPage: async (page) => {
+      let newdata = JSON.parse(JSON.stringify(self.formactivities))
+      newdata.current_page = page
+      newdata.data = []
+
+      self.saveFormActivities(newdata)
+    },
+    getAllFormActivities: async () => {
       const formActivityApi = new FormActivityApi(self.environment.api)
-      const result = await formActivityApi.getAllFormActivity(page)
+      const result = await formActivityApi.getAllFormActivity(self.formactivities.current_page)
 
       if (result.kind === "ok") {
         self.saveFormActivities(result.formactivities)
