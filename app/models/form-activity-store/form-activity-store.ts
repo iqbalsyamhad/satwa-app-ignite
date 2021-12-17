@@ -3,6 +3,7 @@ import { FormActivitiesModel, FormActivitiesSnapshot } from "../form-activities/
 import { FormActivityModel, FormActivitySnapshot } from "../form-activity/form-activity"
 import { FormActivityApi } from "../../services/api/form-activity/form-activity-api"
 import { withEnvironment } from "../extensions/with-environment"
+import { SatwaModel, SatwaSnapshot } from "../satwa/satwa"
 
 /**
  * Model description here for TypeScript hints.
@@ -12,6 +13,8 @@ export const FormActivityStoreModel = types
   .props({
     formactivities: types.optional(FormActivitiesModel, {}),
     formactivity: types.optional(FormActivityModel, {}),
+    filterDate: types.optional(types.string, ''),
+    filterSatwa: types.optional(SatwaModel, {}),
   })
   .extend(withEnvironment)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -28,6 +31,12 @@ export const FormActivityStoreModel = types
     resetFormActivity: () => {
       self.formactivity = cast({})
     },
+    setFilterDate: (date) => {
+      self.filterDate = date
+    },
+    setFilterSatwa: (satwa: SatwaSnapshot) => {
+      self.filterSatwa = cast(satwa)
+    },
   }))
   .actions((self) => ({
     setCurrentPage: async (page) => {
@@ -39,7 +48,11 @@ export const FormActivityStoreModel = types
     },
     getAllFormActivities: async () => {
       const formActivityApi = new FormActivityApi(self.environment.api)
-      const result = await formActivityApi.getAllFormActivity(self.formactivities.current_page)
+      const result = await formActivityApi.getAllFormActivity(
+        self.formactivities.current_page,
+        self.filterDate,
+        self.filterSatwa
+      )
 
       if (result.kind === "ok") {
         self.saveFormActivities(result.formactivities)

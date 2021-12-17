@@ -41,10 +41,13 @@ export class FormActivityApi {
         }
     }
 
-    async getAllFormActivity(page): Promise<GetFormActivityResults> {
+    async getAllFormActivity(page, date, satwa): Promise<GetFormActivityResults> {
         try {
+            let qs = '';
+            if (date != '') qs = qs + `&tanggal=${date}`;
+            if (satwa?.id) qs = qs + `&id_satwa=${satwa.id}`;
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                `/api/aktivitas?page=${page}`,
+                `/api/aktivitas?page=${page}${qs}`,
             );
 
             if (!response.ok) {
