@@ -16,8 +16,8 @@ export class FormActivityApi {
             let bodyFormData = new FormData();
             bodyFormData.append('tanggal', date);
             bodyFormData.append('id_satwa', satwaId);
-            bodyFormData.append('id_koordinator', '1');
-            bodyFormData.append('id_kadiv', '1');
+            // bodyFormData.append('id_koordinator', '1');
+            // bodyFormData.append('id_kadiv', '1');
 
             const response: ApiResponse<any> = await this.api.apisauce.post(
                 "/api/aktivitas/store",
@@ -76,7 +76,7 @@ export class FormActivityApi {
                     if (problem) return problem;
                 }
 
-                const { data } = response.data;
+                const { data } = response.data.data;
                 if (!data.length) {
                     // create shadow object for new data
                     if (date && satwaId) {

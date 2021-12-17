@@ -124,7 +124,7 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
         {!formActivitiesStore.formactivity.list_aktivitas.length && fetched ?
           <View style={{ alignItems: 'center', marginTop: spacing[4] }}>
             <Text style={{ color: 'grey' }}>No Data!</Text>
-            {date && satwa_ &&
+            {(date && satwa_?.id) &&
               <Button
                 preset="small"
                 style={{ marginTop: spacing[3] }}
@@ -150,6 +150,7 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             <ActivityItem key={Math.random()} data={activity} />
           )
         }
+        <View style={{ height: spacing[5] }} />
       </Screen>
       <Modal
         isVisible={showCalendar}
