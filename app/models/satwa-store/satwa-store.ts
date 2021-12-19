@@ -12,6 +12,7 @@ export const SatwaStoreModel = types
   .props({
     satwa: types.optional(types.array(SatwaModel), []),
     satwaupdates: types.optional(types.array(SatwaUpdateModel), []),
+    errmsg: types.optional(types.string, ''),
   })
   .extend(withEnvironment)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -22,6 +23,9 @@ export const SatwaStoreModel = types
     },
     saveSatwaUpdates: (satwaUpdateSnapshot: SatwaUpdateSnapshot[]) => {
       applySnapshot(self.satwaupdates, satwaUpdateSnapshot);
+    },
+    setErrmsg: (err: string) => {
+      self.errmsg = err
     },
   }))
   .actions((self) => ({
@@ -50,8 +54,9 @@ export const SatwaStoreModel = types
       const result = await satwaApi.createUpdateSatwa(collection)
 
       if (result.kind === "ok") {
-        //
+        self.setErrmsg('');
       } else {
+        self.setErrmsg('Error occured!');
         __DEV__ && console.tron.log(result.kind)
       }
     },

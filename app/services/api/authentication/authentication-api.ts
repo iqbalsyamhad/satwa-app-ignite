@@ -21,7 +21,7 @@ export class AuthenticationApi {
             );
 
             if (!response.ok) {
-                alert(response.data?.message);
+                alert(response.data?.status);
 
                 const problem = getGeneralApiProblem(response);
                 if (problem) return problem;

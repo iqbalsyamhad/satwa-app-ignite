@@ -3,7 +3,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { observer } from "mobx-react-lite"
 import { FormProvider, SubmitHandler, SubmitErrorHandler, useForm } from "react-hook-form"
-import { Image, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, Image, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, TextField } from "../../components"
 // import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -26,7 +26,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
     };
     const { ...methods } = useForm();
     const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-      return console.log(errors)
+      Alert.alert('Ops..', Object.values(errors)[0].message)
     }
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
       setLoading(true);

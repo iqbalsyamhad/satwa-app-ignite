@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Dimensions, Image, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, Dimensions, Image, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text, TextField } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -38,7 +38,7 @@ export const SatwaUpdateNewScreen: FC<StackScreenProps<NavigatorParamList, "satw
     const [keterangan, setKeterangan] = useState(null);
     const [imgresponse, setImgResponse] = useState(null);
     const { satwaStore } = useStores();
-    const { satwa, getAllSatwa, createUpdateSatwa } = satwaStore;
+    const { satwa, getAllSatwa, getAllUpdateSatwa, createUpdateSatwa, errmsg } = satwaStore;
     const modalizeRef = useRef<Modalize>(null);
     const rbSheet = useRef<RBSheet>(null);
 
@@ -75,7 +75,7 @@ export const SatwaUpdateNewScreen: FC<StackScreenProps<NavigatorParamList, "satw
     };
     const { ...methods } = useForm();
     const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-      return console.log(errors)
+      Alert.alert('Ops..', Object.values(errors)[0].message)
     }
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
       try {
@@ -92,7 +92,13 @@ export const SatwaUpdateNewScreen: FC<StackScreenProps<NavigatorParamList, "satw
 
         setSaveLoading(true);
         await createUpdateSatwa(collection);
-        setSaveLoading(false);
+        if (errmsg == '') {
+          await getAllUpdateSatwa()
+          setSaveLoading(false);
+          props.navigation.goBack();
+        } else {
+          setSaveLoading(false);
+        }
       } catch (error) {
         alert(error.message);
       }

@@ -11,6 +11,7 @@ import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
 import { useStores } from "../../models"
 import { createFilter } from 'react-native-search-filter'
+import moment from "moment"
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -92,7 +93,7 @@ export const PeralatanUsesScreen: FC<StackScreenProps<NavigatorParamList, "peral
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 1.5 }}>{data.peralatan.nama}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 1 }}>{data.jumlah}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1 }}>-</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1 }}>{moment(data.created_at).format('DD MMM YY')}</DataTable.Cell>
               </DataTable.Row>
             )}
           </DataTable>

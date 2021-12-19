@@ -77,19 +77,17 @@ export const PeralatanStokScreen: FC<StackScreenProps<NavigatorParamList, "peral
             }}>
               <DataTable.Title>ID</DataTable.Title>
               <DataTable.Title style={{ flex: 1.5 }}>Peralatan</DataTable.Title>
-              <DataTable.Title style={{ flex: 1 }}>Ktg</DataTable.Title>
+              <DataTable.Title style={{ flex: 1.5 }}>Ktg</DataTable.Title>
               <DataTable.Title style={{ flex: 1 }}>Stok</DataTable.Title>
               <DataTable.Title>Kondisi</DataTable.Title>
-              <DataTable.Title style={{ flex: 1.5 }}>Aksi</DataTable.Title>
             </DataTable.Header>
             {peralatans.filter(createFilter(searchTerm, ['nama'])).map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 1.5 }}>{data.nama}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1 }}>{data.kategori.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>{data.kategori.nama}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 1 }}>{data.stok}</DataTable.Cell>
                 <DataTable.Cell>Banyak</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1.5 }}>+USE</DataTable.Cell>
               </DataTable.Row>
             )}
           </DataTable>

@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text, TextField } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -26,7 +26,7 @@ export const PeralatanUsesNewScreen: FC<StackScreenProps<NavigatorParamList, "pe
     const [searchTerm, setSearchTerm] = useState('');
     const [peralatan_, setPeralatan_] = useState(null);
     const { peralatanStore } = useStores();
-    const { peralatans, getAllPeralatan, loading, setLoading, createPeralatanPenggunaan, errmsg } = peralatanStore;
+    const { peralatans, getAllPeralatan, getAllPeralatanPenggunaan, loading, setLoading, createPeralatanPenggunaan, errmsg } = peralatanStore;
     const modalizeRef = useRef<Modalize>(null);
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export const PeralatanUsesNewScreen: FC<StackScreenProps<NavigatorParamList, "pe
     const { ...methods } = useForm();
 
     const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-      return console.log(errors)
+      Alert.alert('Ops..', Object.values(errors)[0].message)
     }
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
       try {
@@ -54,8 +54,14 @@ export const PeralatanUsesNewScreen: FC<StackScreenProps<NavigatorParamList, "pe
 
         setSaveLoading(true);
         await createPeralatanPenggunaan(collection);
-        setSaveLoading(false);
-        errmsg == '' ? props.navigation.goBack() : alert(errmsg);
+        if (errmsg == '') {
+          await getAllPeralatanPenggunaan();
+          setSaveLoading(false);
+          props.navigation.goBack()
+        } else {
+          setSaveLoading(false);
+          alert(errmsg);
+        }
       } catch (error) {
         alert(error.message);
       }

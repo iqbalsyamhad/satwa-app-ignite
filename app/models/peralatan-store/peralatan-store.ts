@@ -60,7 +60,6 @@ export const PeralatanStoreModel = types
       if (result.kind === "ok") {
         if (result.data.message == "success") {
           self.setErrMsg('')
-          self.savePeralatanUses([...self.peralatanuses, collection])
         } else {
           self.setErrMsg(result.data.status)
         }

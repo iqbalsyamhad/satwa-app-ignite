@@ -60,6 +60,7 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
       try {
         if (!pakan_) throw new Error('Pilih jenis pakan!');
+        if (!supplier_?.id) throw new Error('Pilih supplier!');
         if (!imgresponse) throw new Error('Upload gambar permasalahan pakan!');
 
         let collection = {
