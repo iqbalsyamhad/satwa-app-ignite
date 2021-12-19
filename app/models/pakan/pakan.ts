@@ -9,6 +9,8 @@ export const PakanModel = types
   .props({
     id: types.maybe(types.integer),
     nama: types.maybe(types.string),
+    stok_tetap: types.maybe(types.integer),
+    stok_datang: types.maybe(types.integer),
     id_kategori_pakan: types.maybe(types.integer),
     kategori: types.optional(PakanKategoriModel, {}),
   })

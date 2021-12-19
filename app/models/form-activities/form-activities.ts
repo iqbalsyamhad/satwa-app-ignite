@@ -7,10 +7,10 @@ import { FormActivityModel } from "../form-activity/form-activity"
 export const FormActivitiesModel = types
   .model("FormActivities")
   .props({
-    "current_page": types.maybe(types.integer),
-    "last_page": types.maybe(types.integer),
-    "total": types.maybe(types.integer),
-    "data": types.optional(types.array(FormActivityModel), [])
+    current_page: types.maybe(types.integer),
+    last_page: types.maybe(types.integer),
+    total: types.maybe(types.integer),
+    data: types.optional(types.array(FormActivityModel), [])
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

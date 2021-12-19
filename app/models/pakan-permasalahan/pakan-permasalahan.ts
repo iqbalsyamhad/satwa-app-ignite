@@ -17,6 +17,7 @@ export const PakanPermasalahanModel = types
     bukti_foto: types.maybe(types.string),
     pakan: types.optional(PakanModel, {}),
     supplier: types.optional(SupplierModel, {}),
+    created_at: types.maybe(types.string),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars

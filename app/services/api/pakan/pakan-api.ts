@@ -1,7 +1,7 @@
 import { ApiResponse } from "apisauce";
 import { Api } from "../api";
 import { getGeneralApiProblem } from "../api-problem";
-import { GetPakanResults, GetPakanPermasalahanResults, GetStandardApiRespone } from "../api.types";
+import { GetPakanResults, GetPakanPermasalahanResult, GetStandardApiRespone } from "../api.types";
 
 export class PakanApi {
     private api: Api;
@@ -33,11 +33,14 @@ export class PakanApi {
         }
     }
 
-    async getAllPakanPermasalahan(): Promise<GetPakanPermasalahanResults> {
+    async getAllPakanPermasalahan(page, date, pakan_): Promise<GetPakanPermasalahanResult> {
         try {
             console.log("api pakan-m start!")
+            let qs = '';
+            if (date != '') qs = qs + `&tanggal=${date}`;
+            if (pakan_?.id) qs = qs + `&id_pakan=${pakan_.id}`;
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                "/api/serah_terima_pakan",
+                `/api/serah_terima_pakan?page=${page}${qs}`,
             );
 
             if (!response.ok) {
@@ -64,7 +67,7 @@ export class PakanApi {
             }
 
             const response: ApiResponse<any> = await this.api.apisauce.post(
-                "/api/permasalahan_pakan/store",
+                "/api/serah_terima_pakan/store",
                 bodyFormData,
                 {
                     headers: {

@@ -14,7 +14,7 @@ export class SatwaJenisApi {
         try {
             console.log("api satwa start!")
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                "/api/satwajenis",
+                "/api/jenis_satwa",
             );
 
             if (!response.ok) {

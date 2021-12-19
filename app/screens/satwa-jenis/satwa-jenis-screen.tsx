@@ -10,6 +10,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, TextInput } from "react-native-paper"
 import { useStores } from "../../models"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -19,6 +20,7 @@ const ROOT: ViewStyle = {
 export const SatwaJenisScreen: FC<StackScreenProps<NavigatorParamList, "satwaJenis">> = observer(
   ({ navigation }) => {
     const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const { satwaJenisStore } = useStores();
     useEffect(() => {
       getSatwaJenis();
@@ -49,6 +51,8 @@ export const SatwaJenisScreen: FC<StackScreenProps<NavigatorParamList, "satwaJen
             underlineColor={'transparent'}
             left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
             placeholder={'Cari'}
+            value={searchTerm}
+            onChangeText={(v) => setSearchTerm(v)}
           />
         </View>
         <ScrollView
@@ -66,13 +70,13 @@ export const SatwaJenisScreen: FC<StackScreenProps<NavigatorParamList, "satwaJen
               marginTop: spacing[3],
               borderBottomColor: color.primary
             }}>
-              <DataTable.Title>No.</DataTable.Title>
-              <DataTable.Title style={{ flex: 1 }}>Nama</DataTable.Title>
+              <DataTable.Title style={{ flex: 1 }}>ID</DataTable.Title>
+              <DataTable.Title style={{ flex: 4 }}>Nama</DataTable.Title>
             </DataTable.Header>
-            {satwaJenisStore.satwa_jenis?.map(data =>
+            {satwaJenisStore.satwa_jenis.filter(createFilter(searchTerm, ['nama'])).map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
-                <DataTable.Cell>{data.id}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1 }}>{data.nama}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1 }}>{data.id}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 4 }}>{data.nama}</DataTable.Cell>
               </DataTable.Row>
             )}
           </DataTable>

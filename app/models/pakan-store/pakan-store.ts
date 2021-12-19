@@ -1,8 +1,8 @@
-import { applySnapshot, Instance, SnapshotOut, types } from "mobx-state-tree"
+import { applySnapshot, cast, Instance, SnapshotOut, types } from "mobx-state-tree"
 import { PakanApi } from "../../services/api/pakan/pakan-api";
 import { withEnvironment } from "../extensions/with-environment"
 import { PakanModel, PakanSnapshot } from "../pakan/pakan"
-import { PakanPermasalahanModel, PakanPermasalahanSnapshot } from "../pakan-permasalahan/pakan-permasalahan";
+import { PakanPermasalahanParentModel, PakanPermasalahanParentSnapshot } from "../pakan-permasalahan-parent/pakan-permasalahan-parent";
 
 /**
  * Model description here for TypeScript hints.
@@ -11,7 +11,9 @@ export const PakanStoreModel = types
   .model("PakanStore")
   .props({
     pakans: types.optional(types.array(PakanModel), []),
-    pakansMasalah: types.optional(types.array(PakanPermasalahanModel), []),
+    pakansMasalah: types.optional(PakanPermasalahanParentModel, {}),
+    filterDate: types.optional(types.string, ''),
+    filterPakan: types.optional(PakanModel, {}),
   })
   .extend(withEnvironment)
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -20,12 +22,25 @@ export const PakanStoreModel = types
       applySnapshot(self.pakans, pakanSnapshot);
       // self.pakans = cast(pakanSnapshot);
     },
-    savePakansMasalah: (pakanMasalahSnapshot: PakanPermasalahanSnapshot[]) => {
+    savePakansMasalah: (pakanMasalahSnapshot: PakanPermasalahanParentSnapshot) => {
       applySnapshot(self.pakansMasalah, pakanMasalahSnapshot);
-      // self.pakans = cast(pakanSnapshot);
+      // self.pakans = cast(pakanMasalahSnapshot);
+    },
+    setFilterDate: (date) => {
+      self.filterDate = date
+    },
+    setFilterPakan: (pakan: PakanSnapshot) => {
+      self.filterPakan = cast(pakan)
     },
   }))
   .actions((self) => ({
+    setCurrentPage: async (page) => {
+      let newdata = JSON.parse(JSON.stringify(self.pakansMasalah))
+      newdata.current_page = page
+      newdata.data = []
+
+      self.savePakansMasalah(newdata)
+    },
     getAllPakan: async () => {
       const pakanApi = new PakanApi(self.environment.api)
       const result = await pakanApi.getAllPakan()
@@ -38,7 +53,11 @@ export const PakanStoreModel = types
     },
     getAllPakanPermasalahan: async () => {
       const pakanApi = new PakanApi(self.environment.api)
-      const result = await pakanApi.getAllPakanPermasalahan()
+      const result = await pakanApi.getAllPakanPermasalahan(
+        self.pakansMasalah.current_page,
+        self.filterDate,
+        self.filterPakan
+      );
 
       if (result.kind === "ok") {
         self.savePakansMasalah(result.pakan)

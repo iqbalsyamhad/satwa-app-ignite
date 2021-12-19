@@ -23,14 +23,21 @@ const primaryBox: ViewStyle = {
 export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = observer(
   (props) => {
     const [loading, setLoading] = useState(false);
-    const { satwaStore } = useStores();
+    const [loadingsj, setLoadingsj] = useState(false);
+    const { satwaStore, satwaJenisStore } = useStores();
     useEffect(() => {
       initData();
+      getSatwaJenis();
     }, []);
     const initData = async () => {
       setLoading(true);
       await satwaStore.getAllSatwa();
       setLoading(false);
+    }
+    const getSatwaJenis = async () => {
+      setLoadingsj(true);
+      await satwaJenisStore.getAllSatwaJenis();
+      setLoadingsj(false);
     }
     return (
       <Screen style={ROOT} header={<></>}>
@@ -91,7 +98,7 @@ export const HomeScreen: FC<StackScreenProps<NavigatorParamList, "home">> = obse
               </View>
               <View style={{ flex: 1.2, alignItems: 'center' }}>
                 <Subheading style={{ color: color.palette.white }}>Jenis Satwa</Subheading>
-                <Text style={{ color: color.palette.white, fontSize: 40 }}>200</Text>
+                <Text style={{ color: color.palette.white, fontSize: 40 }}>{satwaJenisStore.satwa_jenis.length}</Text>
               </View>
             </View>
             <Divider style={{ borderColor: color.palette.white, borderWidth: 0.5 }} />
