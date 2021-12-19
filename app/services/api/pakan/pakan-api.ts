@@ -37,7 +37,7 @@ export class PakanApi {
         try {
             console.log("api pakan-m start!")
             const response: ApiResponse<any> = await this.api.apisauce.get(
-                "/api/permasalahan_pakan",
+                "/api/serah_terima_pakan",
             );
 
             if (!response.ok) {

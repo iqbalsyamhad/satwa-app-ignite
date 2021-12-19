@@ -12,6 +12,7 @@ import { NavigatorParamList } from "../../navigators"
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form"
 import { ActivityIndicator, Paragraph, Subheading, TextInput, Title } from "react-native-paper"
 import { useStores } from "../../models"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -22,6 +23,7 @@ const ROOT: ViewStyle = {
 export const PeralatanUsesNewScreen: FC<StackScreenProps<NavigatorParamList, "peralatanUsesNew">> = observer(
   (props) => {
     const [saveLoading, setSaveLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const [peralatan_, setPeralatan_] = useState(null);
     const { peralatanStore } = useStores();
     const { peralatans, getAllPeralatan, loading, setLoading, createPeralatanPenggunaan, errmsg } = peralatanStore;
@@ -144,10 +146,12 @@ export const PeralatanUsesNewScreen: FC<StackScreenProps<NavigatorParamList, "pe
               underlineColor={'transparent'}
               left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
               placeholder={'Cari'}
+              value={searchTerm}
+              onChangeText={(v) => setSearchTerm(v)}
             />
           </View>
           {loading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-          {peralatans.map(data =>
+          {peralatans.filter(createFilter(searchTerm, ['nama'])).map(data =>
             <TouchableOpacity key={Math.random()} onPress={() => setPeralatan_(JSON.parse(JSON.stringify(data)))}>
               <View
                 style={{

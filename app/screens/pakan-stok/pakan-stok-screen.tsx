@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { RefreshControl, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
-import { Header, Screen, Text } from "../../components"
+import { Button, Header, Screen, Text } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
 import { color, spacing } from "../../theme"
@@ -10,6 +10,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
 import { useStores } from "../../models"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -19,16 +20,17 @@ const ROOT: ViewStyle = {
 export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok">> = observer(
   (props) => {
     const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const { pakanStore } = useStores();
-    const { pakans, getAllPakan } = pakanStore;
+    const { pakansMasalah, getAllPakanPermasalahan } = pakanStore;
 
     useEffect(() => {
-      getPakan();
+      getPakanStok();
     }, []);
 
-    const getPakan = async () => {
+    const getPakanStok = async () => {
       setLoading(true);
-      await getAllPakan();
+      await getAllPakanPermasalahan();
       setLoading(false);
     }
 
@@ -53,8 +55,20 @@ export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok
             underlineColor={'transparent'}
             left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
             placeholder={'Cari'}
+            value={searchTerm}
+            onChangeText={(v) => setSearchTerm(v)}
           />
         </View>
+        <Button
+          onPress={() => props.navigation.navigate('pakanMasalahNew')}
+          preset="small"
+          style={{
+            marginHorizontal: spacing[5],
+            marginTop: spacing[3],
+            alignSelf: 'baseline',
+          }}>
+          <Paragraph style={{ color: color.palette.white }}><Icofont name="plus-circle-outline" size={16} /> Tambah</Paragraph>
+        </Button>
         <ScrollView
           style={{
             paddingHorizontal: spacing[5]
@@ -62,7 +76,7 @@ export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok
           refreshControl={
             <RefreshControl
               refreshing={loading}
-              onRefresh={() => getPakan()}
+              onRefresh={() => getPakanStok()}
             />
           }>
           <DataTable>
@@ -77,14 +91,14 @@ export const PakanStokScreen: FC<StackScreenProps<NavigatorParamList, "pakanStok
               <DataTable.Title style={{ flex: 1.5 }}>Stok D</DataTable.Title>
               <DataTable.Title style={{ flex: 2 }}>Pertanggal</DataTable.Title>
             </DataTable.Header>
-            {pakans.map(data =>
+            {pakansMasalah.filter(createFilter(searchTerm, ['pakan.nama'])).map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 3 }}>{data.nama}</DataTable.Cell>
-                <DataTable.Cell>{data.kategori.nama}</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1.5 }}>-</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 1.5 }}>-</DataTable.Cell>
-                <DataTable.Cell style={{ flex: 2 }}>-</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 3 }}>{data.pakan.nama}</DataTable.Cell>
+                <DataTable.Cell>{'-'}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>{'-'}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 1.5 }}>{data.jumlah}</DataTable.Cell>
+                <DataTable.Cell style={{ flex: 2 }}>{'-'}</DataTable.Cell>
               </DataTable.Row>
             )}
           </DataTable>

@@ -10,6 +10,7 @@ import { color, spacing } from "../../theme"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
 import { useStores } from "../../models"
 import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -19,6 +20,7 @@ const ROOT: ViewStyle = {
 export const SatwaScreen: FC<StackScreenProps<NavigatorParamList, "satwa">> = observer(
   ({ navigation }) => {
     const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const { satwaStore } = useStores();
     const { satwa, getAllSatwa } = satwaStore;
 
@@ -53,6 +55,8 @@ export const SatwaScreen: FC<StackScreenProps<NavigatorParamList, "satwa">> = ob
             underlineColor={'transparent'}
             left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
             placeholder={'Cari'}
+            value={searchTerm}
+            onChangeText={(v) => setSearchTerm(v)}
           />
         </View>
         <ScrollView
@@ -75,7 +79,7 @@ export const SatwaScreen: FC<StackScreenProps<NavigatorParamList, "satwa">> = ob
               <DataTable.Title style={{ flex: 2 }}>Jenis</DataTable.Title>
               <DataTable.Title>Jumlah</DataTable.Title>
             </DataTable.Header>
-            {satwa.map(data =>
+            {satwa.filter(createFilter(searchTerm, ['nama'])).map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 3 }}>{data.nama}</DataTable.Cell>

@@ -13,7 +13,8 @@ import { useStores } from "../../models"
 import { Modalize } from 'react-native-modalize';
 import Modal from "react-native-modal";
 import moment from "moment"
-import CalendarPicker from 'react-native-calendar-picker';
+import CalendarPicker from 'react-native-calendar-picker'
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -36,6 +37,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
     } = formActivitiesStore;
     const { satwa, getAllSatwa } = satwaStore;
     const [satwaLoading, setSatwaLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const [showCalendar, setShowCalendar] = useState(false);
     const modalizeRef = useRef<Modalize>(null);
 
@@ -212,10 +214,12 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
               underlineColor={'transparent'}
               left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
               placeholder={'Cari'}
+              value={searchTerm}
+              onChangeText={(v) => setSearchTerm(v)}
             />
           </View>
           {satwaLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-          {satwa.map(data =>
+          {satwa.filter(createFilter(searchTerm, ['nama'])).map(data =>
             <TouchableOpacity key={data.id} onPress={() => setFilterSatwa(JSON.parse(JSON.stringify(data)))}>
               <View
                 style={{

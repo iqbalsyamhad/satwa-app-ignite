@@ -37,7 +37,7 @@ export const PakanMasalahScreen: FC<StackScreenProps<NavigatorParamList, "pakanM
         <Header
           leftIcon="back"
           onLeftPress={() => props.navigation.goBack()}
-          headerText="Data Permasalahan Pakan"
+          headerText="Serah Terima Pakan"
         />
       }>
         <View style={{

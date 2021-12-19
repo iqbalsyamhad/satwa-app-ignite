@@ -10,6 +10,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
 import { useStores } from "../../models"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -20,6 +21,7 @@ export const PeralatanUsesScreen: FC<StackScreenProps<NavigatorParamList, "peral
   (props) => {
     const { peralatanStore } = useStores();
     const { peralatanuses, loading, getAllPeralatanPenggunaan, setLoading, errmsg } = peralatanStore;
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
       getPeralatanPenggunaan();
@@ -52,6 +54,8 @@ export const PeralatanUsesScreen: FC<StackScreenProps<NavigatorParamList, "peral
             underlineColor={'transparent'}
             left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
             placeholder={'Cari'}
+            value={searchTerm}
+            onChangeText={(v) => setSearchTerm(v)}
           />
         </View>
         <Button
@@ -83,7 +87,7 @@ export const PeralatanUsesScreen: FC<StackScreenProps<NavigatorParamList, "peral
               <DataTable.Title style={{ flex: 1 }}>Jml</DataTable.Title>
               <DataTable.Title style={{ flex: 1 }}>Pertanggal</DataTable.Title>
             </DataTable.Header>
-            {peralatanuses.map(data =>
+            {peralatanuses.filter(createFilter(searchTerm, ['peralatan.nama'])).map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 1.5 }}>{data.peralatan.nama}</DataTable.Cell>

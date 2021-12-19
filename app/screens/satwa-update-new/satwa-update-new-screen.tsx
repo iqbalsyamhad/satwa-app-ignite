@@ -14,6 +14,7 @@ import { useStores } from "../../models";
 import RBSheet from "react-native-raw-bottom-sheet";
 import * as ImagePicker from '../../utils/imagepicker';
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -32,6 +33,7 @@ export const SatwaUpdateNewScreen: FC<StackScreenProps<NavigatorParamList, "satw
   (props) => {
     const [saveLoading, setSaveLoading] = useState(false);
     const [satwaLoading, setSatwaLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const [satwa_, setSatwa_] = useState(null);
     const [keterangan, setKeterangan] = useState(null);
     const [imgresponse, setImgResponse] = useState(null);
@@ -240,10 +242,12 @@ export const SatwaUpdateNewScreen: FC<StackScreenProps<NavigatorParamList, "satw
               underlineColor={'transparent'}
               left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
               placeholder={'Cari'}
+              value={searchTerm}
+              onChangeText={(v) => setSearchTerm(v)}
             />
           </View>
           {satwaLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-          {satwa.map(satwa =>
+          {satwa.filter(createFilter(searchTerm, ['nama'])).map(satwa =>
             <TouchableOpacity key={satwa.id} onPress={() => setSatwa_(JSON.parse(JSON.stringify(satwa)))}>
               <View
                 style={{

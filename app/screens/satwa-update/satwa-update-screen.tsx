@@ -10,6 +10,7 @@ import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
 import { DataTable, Paragraph, TextInput } from "react-native-paper"
 import { useStores } from "../../models"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -19,6 +20,7 @@ const ROOT: ViewStyle = {
 export const SatwaUpdateScreen: FC<StackScreenProps<NavigatorParamList, "satwaUpdate">> = observer(
   (props) => {
     const [loading, setLoading] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const { satwaStore } = useStores();
     const { satwaupdates, getAllUpdateSatwa } = satwaStore;
 
@@ -53,6 +55,8 @@ export const SatwaUpdateScreen: FC<StackScreenProps<NavigatorParamList, "satwaUp
             underlineColor={'transparent'}
             left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
             placeholder={'Cari'}
+            value={searchTerm}
+            onChangeText={(v) => setSearchTerm(v)}
           />
         </View>
         <Button
@@ -85,7 +89,7 @@ export const SatwaUpdateScreen: FC<StackScreenProps<NavigatorParamList, "satwaUp
               <DataTable.Title style={{ flex: 3 }}>Keterangan</DataTable.Title>
               <DataTable.Title>Jumlah</DataTable.Title>
             </DataTable.Header>
-            {satwaupdates.map(data =>
+            {satwaupdates.filter(createFilter(searchTerm, ['satwa.nama'])).map(data =>
               <DataTable.Row key={Math.random()} style={{ borderBottomColor: color.primary }}>
                 <DataTable.Cell>{data.id}</DataTable.Cell>
                 <DataTable.Cell style={{ flex: 2 }}>{data.satwa.nama}</DataTable.Cell>

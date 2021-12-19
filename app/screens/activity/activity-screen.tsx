@@ -16,6 +16,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useStores } from "../../models"
 import { ActivityItem } from "./activity-list"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -27,6 +28,7 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
   const { satwaStore, formActivitiesStore } = useStores();
   const { satwa, getAllSatwa } = satwaStore;
   const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [fetched, setFetched] = useState(false);
   const [satwaLoading, setSatwaLoading] = useState(false);
   const [newactLoading, setNewactLoading] = useState(false);
@@ -195,10 +197,12 @@ export const ActivityScreen: FC<StackScreenProps<NavigatorParamList, "activity">
             underlineColor={'transparent'}
             left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
             placeholder={'Cari'}
+            value={searchTerm}
+            onChangeText={(v) => setSearchTerm(v)}
           />
         </View>
         {satwaLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-        {satwa.map(data =>
+        {satwa.filter(createFilter(searchTerm, ['nama'])).map(data =>
           <TouchableOpacity key={data.id} onPress={() => setSatwa_(JSON.parse(JSON.stringify(data)))}>
             <View
               style={{

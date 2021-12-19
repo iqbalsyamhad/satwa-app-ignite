@@ -14,6 +14,7 @@ import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from "react-
 import * as ImagePicker from '../../utils/imagepicker';
 import RBSheet from "react-native-raw-bottom-sheet"
 import { useStores } from "../../models"
+import { createFilter } from 'react-native-search-filter'
 
 const ROOT: ViewStyle = {
   backgroundColor: color.palette.white,
@@ -24,7 +25,9 @@ const ROOT: ViewStyle = {
 export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pakanMasalahNew">> = observer(
   (props) => {
     const [pakanLoading, setPakanLoading] = useState(false);
+    const [searchPakan, setSearchPakan] = useState('');
     const [supplierLoading, setSupplierLoading] = useState(false);
+    const [searchSupplier, setSearchSupplier] = useState('');
     const [saveLoading, setSaveLoading] = useState(false);
     const [pakan_, setPakan_] = useState(null);
     const [supplier_, setSupplier_] = useState(null);
@@ -114,7 +117,7 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
           <Header
             leftIcon="back"
             onLeftPress={() => props.navigation.goBack()}
-            headerText="Tambah Permasalahan Pakan"
+            headerText="Tambah Serah Terima Pakan"
           />
         }>
           <TouchableOpacity onPress={() => openModal()}>
@@ -247,10 +250,12 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
               underlineColor={'transparent'}
               left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
               placeholder={'Cari'}
+              value={searchPakan}
+              onChangeText={(v) => setSearchPakan(v)}
             />
           </View>
           {pakanLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-          {pakans.map(data =>
+          {pakans.filter(createFilter(searchPakan, ['nama'])).map(data =>
             <TouchableOpacity key={data.id} onPress={() => setPakan_(JSON.parse(JSON.stringify(data)))}>
               <View
                 style={{
@@ -292,10 +297,12 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
               underlineColor={'transparent'}
               left={<TextInput.Icon name="magnify" color={color.palette.primary} />}
               placeholder={'Cari'}
+              value={searchSupplier}
+              onChangeText={(v) => setSearchSupplier(v)}
             />
           </View>
           {supplierLoading && <ActivityIndicator style={{ alignSelf: 'center' }} />}
-          {suppliers.map(data =>
+          {suppliers.filter(createFilter(searchSupplier, ['nama'])).map(data =>
             <TouchableOpacity key={data.id} onPress={() => setSupplier_(JSON.parse(JSON.stringify(data)))}>
               <View
                 style={{
