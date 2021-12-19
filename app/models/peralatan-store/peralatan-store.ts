@@ -65,6 +65,7 @@ export const PeralatanStoreModel = types
           self.setErrMsg(result.data.status)
         }
       } else {
+        self.setErrMsg('Unknown Error');
         __DEV__ && console.tron.log(result.kind)
       }
     },

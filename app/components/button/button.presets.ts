@@ -25,7 +25,7 @@ export const viewPresets: Record<string, ViewStyle> = {
    */
   primary: {
     ...BASE_VIEW,
-    paddingVertical: 20,
+    paddingVertical: 10,
     paddingHorizontal: spacing[4],
     borderRadius: spacing[3],
     backgroundColor: color.palette.primary

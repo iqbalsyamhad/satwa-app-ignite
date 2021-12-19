@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { Image, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
+import { Alert, Image, ScrollView, TouchableOpacity, View, ViewStyle } from "react-native"
 import { Button, Header, Screen, Text, TextField } from "../../components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "../../models"
@@ -8,7 +8,7 @@ import { color, spacing } from "../../theme"
 import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
-import { ActivityIndicator, Menu, Paragraph, RadioButton, Subheading, TextInput, Title } from "react-native-paper"
+import { ActivityIndicator, Checkbox, Menu, Paragraph, RadioButton, Subheading, TextInput, Title } from "react-native-paper"
 import { Modalize } from 'react-native-modalize';
 import { FormProvider, SubmitErrorHandler, SubmitHandler, useForm } from "react-hook-form";
 import * as ImagePicker from '../../utils/imagepicker';
@@ -31,6 +31,7 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
     const [saveLoading, setSaveLoading] = useState(false);
     const [pakan_, setPakan_] = useState(null);
     const [supplier_, setSupplier_] = useState(null);
+    const [isBermasalah, setIsBermasalah] = useState(false);
     const [keterangan, setKeterangan] = useState('Retur');
     const [alasan, setAlasan] = useState('Tidak Layak');
     const [imgresponse, setImgResponse] = useState(null);
@@ -54,7 +55,7 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
     };
     const { ...methods } = useForm();
     const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-      return console.log(errors)
+      Alert.alert('Ops..', Object.values(errors)[0].message)
     }
     const onSubmit: SubmitHandler<FormValues> = async (data) => {
       try {
@@ -65,14 +66,20 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
           id_pakan: pakan_.id,
           jumlah: data.jumlah,
           id_supplier: supplier_.id,
-          keterangan: keterangan,
-          alasan: alasan,
+          keterangan: isBermasalah ? keterangan : '',
+          alasan: isBermasalah ? alasan : '',
           bukti_foto: { name: imgresponse.fileName, ...imgresponse },
         }
 
         setSaveLoading(true);
         await createPakanPermasalahan(collection)
-        setSaveLoading(false);
+        if (pakanStore.errmsg == '') {
+          await pakanStore.getAllPakanPermasalahan();
+          setSaveLoading(false);
+          props.navigation.goBack();
+        } else {
+          setSaveLoading(false);
+        }
       } catch (error) {
         alert(error.message);
       }
@@ -160,19 +167,32 @@ export const PakanMasalahNewScreen: FC<StackScreenProps<NavigatorParamList, "pak
               <Icofont name="chevron-down" color={color.primary} size={28} />
             </View>
           </TouchableOpacity>
-          <Paragraph style={{ marginTop: spacing[5] }}>Keterangan</Paragraph>
-          <View>
-            <RadioButton.Group onValueChange={value => setKeterangan(value)} value={keterangan}>
-              <RadioButton.Item label="Retur" value="Retur" />
-              <RadioButton.Item label="Permintaan" value="Permintaan" />
-            </RadioButton.Group>
-          </View>
-          <Paragraph style={{ marginTop: spacing[5] }}>Alasan</Paragraph>
-          <View>
-            <RadioButton.Group onValueChange={value => setAlasan(value)} value={alasan}>
-              <RadioButton.Item label="Tidak Layak" value="Tidak Layak" />
-              <RadioButton.Item label="Kurang" value="Kurang" />
-            </RadioButton.Group>
+          <View style={{
+            backgroundColor: color.palette.bgForms,
+            marginTop: spacing[5],
+            borderRadius: spacing[3],
+            borderWidth: 1,
+            borderColor: "#E7ECF3",
+          }}>
+            <Checkbox.Item label="Serah Terima Bermasalah" status={isBermasalah ? "checked" : "unchecked"} onPress={() => setIsBermasalah(v => !v)} />
+            {isBermasalah &&
+              <View style={{ paddingHorizontal: spacing[3] }}>
+                <Paragraph style={{ marginTop: spacing[5] }}>Keterangan</Paragraph>
+                <View>
+                  <RadioButton.Group onValueChange={value => setKeterangan(value)} value={keterangan}>
+                    <RadioButton.Item label="Retur" value="Retur" />
+                    <RadioButton.Item label="Permintaan" value="Permintaan" />
+                  </RadioButton.Group>
+                </View>
+                <Paragraph style={{ marginTop: spacing[5] }}>Alasan</Paragraph>
+                <View>
+                  <RadioButton.Group onValueChange={value => setAlasan(value)} value={alasan}>
+                    <RadioButton.Item label="Tidak Layak" value="Tidak Layak" />
+                    <RadioButton.Item label="Kurang" value="Kurang" />
+                  </RadioButton.Group>
+                </View>
+              </View>
+            }
           </View>
           <Paragraph style={{ marginTop: spacing[5] }}>Bukti Photo</Paragraph>
           <TouchableOpacity onPress={() => rbSheet.current?.open()}>

@@ -12,9 +12,12 @@ export class AuthenticationApi {
 
     async login(email: string, password: string): Promise<LoginResult> {
         try {
+            let bodyFormData = new FormData();
+            bodyFormData.append('email', email);
+            bodyFormData.append('password', password);
             const response: ApiResponse<any> = await this.api.apisauce.post(
                 "/api/login",
-                { email, password }
+                bodyFormData
             );
 
             if (!response.ok) {

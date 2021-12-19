@@ -36,17 +36,45 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
 
     const ActivityItem = (props) => {
       return (
-        <View style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          marginTop: spacing[2],
-        }}>
-          <Checkbox
-            color={color.palette.black}
-            status={props.activityResult == '1' ? 'checked' : 'unchecked'}
-          />
-          <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>{props.jenis_aktivitas.name}</Subheading>
-        </View>
+        <>
+          {props.jenis_aktivitas?.activityInput == "boolean" ?
+            <View style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: spacing[2],
+            }}>
+              <Checkbox
+                color={color.palette.black}
+                status={props.activityResult == '1' ? 'checked' : 'unchecked'}
+              />
+              <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>{props.jenis_aktivitas.name}</Subheading>
+            </View>
+            :
+            props.jenis_aktivitas?.activityInput == "option" ?
+              <View style={{ marginTop: spacing[2] }}>
+                <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>{props.jenis_aktivitas.name}</Subheading>
+                <Divider />
+                {props.jenis_aktivitas?.options.map(opt => {
+                  let isSelected = props.activityResult == opt.value;
+                  return (
+                    <View key={Math.random()} style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      marginTop: spacing[2],
+                    }}>
+                      <Checkbox
+                        color={color.palette.black}
+                        status={isSelected ? 'checked' : 'unchecked'}
+                      />
+                      <Subheading style={{ marginLeft: spacing[2], color: color.palette.black }}>{opt.value}</Subheading>
+                    </View>
+                  )
+                })}
+              </View>
+              :
+              <Paragraph style={{ color: 'red', marginTop: spacing[3], fontStyle: 'italic' }}>{`Aktivitas ${props.jenis_aktivitas?.name} belum didukung!`}</Paragraph>
+          }
+        </>
       )
     }
 
@@ -80,6 +108,8 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
           <Subheading>{`Pelaksana: ${formActivitiesStore.formactivity.pelaksana.name}`}</Subheading>
           <Subheading>{`Koordinator: ${formActivitiesStore.formactivity.koordinator.name}`}</Subheading>
           <Subheading>{`Kadiv: ${formActivitiesStore.formactivity.kadiv.name}`}</Subheading>
+          
+          <View style={{ height: spacing[5] }} />
         </ScrollView>
       </Screen>
     )

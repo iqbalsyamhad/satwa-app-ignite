@@ -1,7 +1,8 @@
 // Use this import if you want to use "env.js" file
 // const { API_URL } = require("../../config/env")
 // Or just specify it directly like this:
-const API_URL = "http://10.0.2.2:8000"
+// const API_URL = "http://10.0.2.2:8000"
+const API_URL = "http://sipesat.serulingmasku.com"
 
 /**
  * The options used to configure the API.

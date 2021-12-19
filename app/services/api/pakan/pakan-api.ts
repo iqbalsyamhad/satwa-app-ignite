@@ -1,7 +1,7 @@
 import { ApiResponse } from "apisauce";
 import { Api } from "../api";
 import { getGeneralApiProblem } from "../api-problem";
-import { GetPakanResults, GetPakanPermasalahanResult, GetStandardApiRespone } from "../api.types";
+import { GetPakanResults, GetPakanPermasalahanResult, CreatePakanPermasalahanResult } from "../api.types";
 
 export class PakanApi {
     private api: Api;
@@ -59,7 +59,7 @@ export class PakanApi {
         }
     }
 
-    async createPakanPermasalahan(collection): Promise<GetStandardApiRespone> {
+    async createPakanPermasalahan(collection): Promise<CreatePakanPermasalahanResult> {
         try {
             let bodyFormData = new FormData();
             for (const el of Object.keys(collection)) {
@@ -79,6 +79,7 @@ export class PakanApi {
             console.log(JSON.stringify(response))
 
             if (!response.ok) {
+                alert(Object.values(response.data.status)[0]);
                 const problem = getGeneralApiProblem(response);
                 if (problem) return problem;
             }

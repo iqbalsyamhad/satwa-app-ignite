@@ -10,6 +10,8 @@ import { PakanPermasalahanParentModel, PakanPermasalahanParentSnapshot } from ".
 export const PakanStoreModel = types
   .model("PakanStore")
   .props({
+    loading: types.optional(types.boolean, false),
+    errmsg: types.maybe(types.string),
     pakans: types.optional(types.array(PakanModel), []),
     pakansMasalah: types.optional(PakanPermasalahanParentModel, {}),
     filterDate: types.optional(types.string, ''),
@@ -25,6 +27,12 @@ export const PakanStoreModel = types
     savePakansMasalah: (pakanMasalahSnapshot: PakanPermasalahanParentSnapshot) => {
       applySnapshot(self.pakansMasalah, pakanMasalahSnapshot);
       // self.pakans = cast(pakanMasalahSnapshot);
+    },
+    setLoading: (loading: boolean) => {
+      self.loading = loading;
+    },
+    setErrMsg: (msg: string) => {
+      self.errmsg = msg;
     },
     setFilterDate: (date) => {
       self.filterDate = date
@@ -70,8 +78,9 @@ export const PakanStoreModel = types
       const result = await pakanApi.createPakanPermasalahan(collection)
 
       if (result.kind === "ok") {
-        //
+        self.setErrMsg('');
       } else {
+        self.setErrMsg(`Error Occured!`);
         __DEV__ && console.tron.log(result.kind)
       }
     },

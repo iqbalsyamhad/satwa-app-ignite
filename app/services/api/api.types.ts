@@ -9,7 +9,7 @@ import { Supplier } from "../../models/supplier/supplier"
 import { SatwaUpdate } from "../../models/satwa-update/satwa-update"
 import { Peralatan } from "../../models/peralatan/peralatan"
 import { PeralatanPenggunaan } from "../../models/peralatan-penggunaan/peralatan-penggunaan"
-import { PakanPermasalahanParent } from "../../models"
+import { PakanPermasalahan, PakanPermasalahanParent } from "../../models"
 
 export type LoginResult = { kind: "ok"; user: Authentication } | GeneralApiProblem
 export type LogoutResult = { kind: "ok"; } | GeneralApiProblem
@@ -44,6 +44,13 @@ export type GetPakanResults = { kind: "ok"; pakan: Pakan[] } | GeneralApiProblem
 export type GetPakanResult = { kind: "ok"; pakan: Pakan } | GeneralApiProblem
 
 export type GetPakanPermasalahanResult = { kind: "ok"; pakan: PakanPermasalahanParent } | GeneralApiProblem
+
+export interface CreatePakanPermasalahan {
+  message: string
+  status: string
+  data: PakanPermasalahan
+}
+export type CreatePakanPermasalahanResult = { kind: "ok"; data: CreatePakanPermasalahan } | GeneralApiProblem
 
 export type GetSupplierResults = { kind: "ok"; supplier: Supplier[] } | GeneralApiProblem
 export type GetSupplierResult = { kind: "ok"; supplier: Supplier } | GeneralApiProblem
