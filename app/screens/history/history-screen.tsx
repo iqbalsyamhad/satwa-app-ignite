@@ -7,7 +7,7 @@ import { Header, Screen } from "../../components"
 import { color, spacing } from "../../theme"
 import { StackScreenProps } from "@react-navigation/stack"
 import { NavigatorParamList } from "../../navigators"
-import { ActivityIndicator, Caption, DataTable, Paragraph, Subheading, TextInput, Title } from "react-native-paper"
+import { ActivityIndicator, Button, Caption, DataTable, Paragraph, Subheading, TextInput, Title } from "react-native-paper"
 import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useStores } from "../../models"
 import { Modalize } from 'react-native-modalize';
@@ -88,30 +88,34 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
           />
         }>
           <Caption style={{ marginLeft: spacing[5] }}>Filter</Caption>
-          <ScrollView horizontal style={{ maxHeight: 50 }}>
+          <View style={{ flexDirection: 'row' }}>
             <View style={[styles.filterBtn, { marginLeft: spacing[5] }]}>
-              <TouchableOpacity onPress={() => setShowCalendar(true)}>
-                <Text style={{ fontSize: 16, margin: 0 }}><Icofont name="calendar" size={16} color={color.primary} />  {filterDate == '' ? 'Semua tanggal' : moment(filterDate).format('DD MMM YYYY')}</Text>
-              </TouchableOpacity>
               {filterDate != '' &&
                 <TouchableOpacity onPress={() => setFilterDate('')}
-                  style={{ marginLeft: spacing[2] }}>
+                  style={{ marginLeft: spacing[1] }}>
                   <Icofont name="close" size={18} color={'red'} />
                 </TouchableOpacity>
               }
+              <Button
+                icon={filterDate != '' ? '' : 'calendar'}
+                onPress={() => setShowCalendar(true)}>
+                {filterDate == '' ? 'Semua tanggal' : moment(filterDate).format('DD MMM YYYY')}
+              </Button>
             </View>
             <View style={[styles.filterBtn, { marginLeft: spacing[2] }]}>
-              <TouchableOpacity onPress={() => openModal()}>
-                <Text style={{ fontSize: 16, margin: 0 }}><Icofont name="donkey" size={16} color={color.primary} />  {!filterSatwa?.id ? 'Semua satwa' : filterSatwa.nama}</Text>
-              </TouchableOpacity>
               {filterSatwa?.id &&
                 <TouchableOpacity onPress={() => setFilterSatwa({})}
-                  style={{ marginLeft: spacing[2] }}>
+                  style={{ marginLeft: spacing[1] }}>
                   <Icofont name="close" size={18} color={'red'} />
                 </TouchableOpacity>
               }
+              <Button
+                icon={filterSatwa?.id ? '' : 'donkey'}
+                onPress={() => openModal()}>
+                {!filterSatwa?.id ? 'Semua satwa' : filterSatwa.nama}
+              </Button>
             </View>
-          </ScrollView>
+          </View>
           <ScrollView
             style={{
               paddingHorizontal: spacing[5]
@@ -127,7 +131,7 @@ export const HistoryScreen: FC<StackScreenProps<NavigatorParamList, "history">> 
                 marginTop: spacing[3],
                 borderBottomColor: color.primary
               }}>
-                <DataTable.Title>No.</DataTable.Title>
+                <DataTable.Title>ID</DataTable.Title>
                 <DataTable.Title style={{ flex: 2 }}>Tanggal</DataTable.Title>
                 <DataTable.Title style={{ flex: 2 }}>Satwa</DataTable.Title>
                 <DataTable.Title style={{ flex: 2 }}>Status</DataTable.Title>
@@ -242,8 +246,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: color.palette.bgForms,
-    padding: spacing[3],
-    paddingHorizontal: spacing[5],
     borderWidth: 1,
     borderColor: '#E7ECF3',
     borderRadius: spacing[3],

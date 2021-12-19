@@ -20,8 +20,9 @@ const ROOT: ViewStyle = {
 
 export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "historyDetail">> = observer(
   (props) => {
-    const { formActivitiesStore } = useStores();
+    const { formActivitiesStore, authenticationStore } = useStores();
     const [loading, setLoading] = useState(false);
+    const [saveloading, setSaveLoading] = useState(false);
     const id = props.route.params.id;
 
     useEffect(() => {
@@ -32,6 +33,16 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
       setLoading(true);
       await formActivitiesStore.getFormActivity(id);
       setLoading(false);
+    }
+
+    const approve = async () => {
+      setSaveLoading(true);
+      const response = await formActivitiesStore.updateFormActivity(id);
+      setSaveLoading(false);
+      if (response) {
+        fetchActivities();
+        formActivitiesStore.getAllFormActivities();
+      }
     }
 
     const ActivityItem = (props) => {
@@ -108,7 +119,14 @@ export const HistoryDetailScreen: FC<StackScreenProps<NavigatorParamList, "histo
           <Subheading>{`Pelaksana: ${formActivitiesStore.formactivity.pelaksana.name}`}</Subheading>
           <Subheading>{`Koordinator: ${formActivitiesStore.formactivity.koordinator.name}`}</Subheading>
           <Subheading>{`Kadiv: ${formActivitiesStore.formactivity.kadiv.name}`}</Subheading>
-          
+          {authenticationStore.user.email == formActivitiesStore.formactivity.koordinator.email &&
+            <Button
+              loading={saveloading}
+              style={{ marginTop: spacing[5] }}
+              text="Setujui"
+              onPress={() => approve()}
+            />
+          }
           <View style={{ height: spacing[5] }} />
         </ScrollView>
       </Screen>

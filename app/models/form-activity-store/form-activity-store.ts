@@ -101,6 +101,17 @@ export const FormActivityStoreModel = types
         __DEV__ && console.tron.log(result.kind)
       }
     },
+    updateFormActivity: async (id) => {
+      const formActivityApi = new FormActivityApi(self.environment.api)
+      const result = await formActivityApi.updateFormActivityStatus(id)
+
+      if (result.kind === "ok") {
+        return true;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return false;
+      }
+    },
   }))
 
 type FormActivityStoreType = Instance<typeof FormActivityStoreModel>

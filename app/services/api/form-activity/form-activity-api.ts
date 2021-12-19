@@ -172,4 +172,29 @@ export class FormActivityApi {
             return { kind: "bad-data" };
         }
     }
+
+    async updateFormActivityStatus(id_aktivitas): Promise<GetStandardApiRespone> {
+        try {
+            let bodyFormData = new FormData();
+            bodyFormData.append('id_aktivitas', id_aktivitas);
+
+            const response: ApiResponse<any> = await this.api.apisauce.post(
+                "/api/aktivitas/status/update",
+                bodyFormData
+            );
+
+            if (!response.ok) {
+                alert(response.data.status);
+                const problem = getGeneralApiProblem(response);
+                if (problem) return problem;
+            }
+
+            const data = response.data
+
+            return { kind: "ok", data };
+        } catch (error) {
+            __DEV__ && console.tron.log(error.message);
+            return { kind: "bad-data" };
+        }
+    }
 }
