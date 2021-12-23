@@ -63,7 +63,7 @@ export const LoginScreen: FC<StackScreenProps<NavigatorParamList, "login">> = ob
             text="Log In"
             onPress={methods.handleSubmit(onSubmit, onError)}
           />
-          <TouchableOpacity style={{ alignSelf: 'center', marginTop: spacing[2] }}>
+          <TouchableOpacity onPress={() => navigation.navigate('forgotPassword')} style={{ alignSelf: 'center', marginTop: spacing[2] }}>
             <Paragraph style={{ color: '#007FFF' }}>Lupa Password?</Paragraph>
           </TouchableOpacity>
         </View>

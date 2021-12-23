@@ -6,6 +6,7 @@ import { AuthenticationApi } from "../../services/api/authentication/authenticat
 import { withEnvironment } from "../extensions/with-environment"
 import { withRootStore } from "../extensions/with-root-store"
 import { withStatus } from "../extensions/with-status"
+import { UserApi } from "../../services/api/user/user-api";
 
 /**
  * Model description here for TypeScript hints.
@@ -54,6 +55,75 @@ export const AuthenticationStoreModel = types
       self.environment.api.setAuthorizationHeader();
       self.setAuthenticated(false);
     }),
+
+    getUser: async () => {
+      const userApi = new UserApi(self.environment.api)
+      const result = await userApi.getUser()
+
+      if (result.kind === "ok") {
+        return result.user;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return false;
+      }
+    },
+
+    updateUser: async (collection) => {
+      const userApi = new UserApi(self.environment.api)
+      const result = await userApi.updateUser(collection)
+
+      if (result.kind === "ok") {
+        if (result.data.message == 'success') {
+          let newuserdata = JSON.parse(JSON.stringify(self.user));
+          newuserdata.nama = collection.name;
+          newuserdata.email = collection.email;
+          self.setUser(newuserdata);
+          return true;
+        } else {
+          alert(result.data.status);
+          return false;
+        }
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return false;
+      }
+    },
+
+    changePassword: async (collection) => {
+      const userApi = new UserApi(self.environment.api)
+      const result = await userApi.changePassword(collection)
+
+      if (result.kind === "ok") {
+        return true;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return false;
+      }
+    },
+
+    forgotPassword: async (email) => {
+      const authApi = new AuthenticationApi(self.environment.api)
+      const result = await authApi.forgotPassword(email)
+
+      if (result.kind === "ok") {
+        return true;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return false;
+      }
+    },
+
+    updatePassword: async (collection) => {
+      const authApi = new AuthenticationApi(self.environment.api)
+      const result = await authApi.resetPassword(collection)
+
+      if (result.kind === "ok") {
+        return true;
+      } else {
+        __DEV__ && console.tron.log(result.kind)
+        return false;
+      }
+    },
   }))
 
 type AuthenticationStoreType = Instance<typeof AuthenticationStoreModel>

@@ -9,7 +9,7 @@ import { useColorScheme } from "react-native"
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen, HistoryDetailScreen, PakanStokScreen, PakanMasalahScreen, SatwaUpdateScreen, SatwaUpdateNewScreen, PakanMasalahNewScreen, PeralatanStokScreen, PeralatanUsesScreen, PeralatanUsesNewScreen, SatwaJenisScreen } from "../screens"
+import { WelcomeScreen, DemoScreen, DemoListScreen, LoginScreen, HomeScreen, SatwaScreen, ActivityScreen, HistoryScreen, ProfileScreen, HistoryDetailScreen, PakanStokScreen, PakanMasalahScreen, SatwaUpdateScreen, SatwaUpdateNewScreen, PakanMasalahNewScreen, PeralatanStokScreen, PeralatanUsesScreen, PeralatanUsesNewScreen, SatwaJenisScreen, ForgotPasswordScreen, PasswordUpdateScreen, ProfilUpdateScreen } from "../screens"
 import { navigationRef } from "./navigation-utilities"
 import { observer } from "mobx-react-lite"
 import { useStores } from "../models"
@@ -30,12 +30,15 @@ import Icofont from 'react-native-vector-icons/MaterialCommunityIcons';
  */
 export type NavigatorParamList = {
   login: undefined
+  forgotPassword: undefined
   dashboard: undefined
   home: undefined
   activity: undefined
   history: undefined
   historyDetail: { id }
   profile: undefined
+  profileUpdate: undefined
+  passwordUpdate: undefined
   satwa: undefined
   satwaJenis: undefined
   satwaUpdate: undefined
@@ -98,6 +101,8 @@ const AppStack = () => {
       }}
     >
       <Stack.Screen name="dashboard" component={dasboard} />
+      <Stack.Screen name="profilUpdate" component={ProfilUpdateScreen} />
+      <Stack.Screen name="passwordUpdate" component={PasswordUpdateScreen} />
       <Stack.Screen name="historyDetail" component={HistoryDetailScreen} />
       <Stack.Screen name="satwa" component={SatwaScreen} />
       <Stack.Screen name="satwaJenis" component={SatwaJenisScreen} />
@@ -125,6 +130,7 @@ const LoginStack = () => {
       }}
     >
       <Stack.Screen name="login" component={LoginScreen} />
+      <Stack.Screen name="forgotPassword" component={ForgotPasswordScreen} />
     </Stack.Navigator>
   )
 }

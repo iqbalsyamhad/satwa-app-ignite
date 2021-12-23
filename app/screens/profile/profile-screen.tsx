@@ -52,6 +52,7 @@ export const ProfileScreen: FC<StackScreenProps<NavigatorParamList, "profile">> 
           <Caption>{authenticationStore.user?.role}</Caption>
           <View style={{ height: spacing[6] }} />
           <List.Item
+            onPress={() => props.navigation.navigate('profilUpdate')}
             style={{ paddingLeft: 0 }}
             title="Update Profil"
             titleStyle={{ marginLeft: -8 }}
@@ -59,6 +60,7 @@ export const ProfileScreen: FC<StackScreenProps<NavigatorParamList, "profile">> 
           />
           <Divider />
           <List.Item
+            onPress={() => props.navigation.navigate('passwordUpdate')}
             style={{ paddingLeft: 0 }}
             title="Ganti Password"
             titleStyle={{ marginLeft: -8 }}

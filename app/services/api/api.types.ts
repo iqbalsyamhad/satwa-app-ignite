@@ -16,7 +16,11 @@ export type LogoutResult = { kind: "ok"; } | GeneralApiProblem
 
 export interface User {
   id: number
-  name: string
+  name: string,
+  email: string,
+  no_hp: string,
+  alamat: string,
+  role: string,
 }
 
 export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
